@@ -58,13 +58,13 @@ class _SignUpState extends State<SignUp> {
         //resizeToAvoidBottomInset: false,
         // appBar: appBarMain(context),
         body: SafeArea(
-            child: Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/images/backnew9.png'),
-          fit: BoxFit.cover,
-        ),
-      ),
+      //       child: Container(
+      // decoration: BoxDecoration(
+      //   image: DecorationImage(
+      //     image: AssetImage('assets/images/backnew9.png'),
+      //     fit: BoxFit.cover,
+      //   ),
+      // ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: isLoading
@@ -177,6 +177,6 @@ class _SignUpState extends State<SignUp> {
                 ),
               ),
       ),
-    )));
+    ));
   }
 }

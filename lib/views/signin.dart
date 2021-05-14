@@ -3,6 +3,7 @@ import 'package:recipe_application/helper/helperfunctions.dart';
 import 'package:recipe_application/services/auth.dart';
 import 'package:recipe_application/services/database.dart';
 import 'package:recipe_application/views/home.dart';
+import 'package:recipe_application/views/publish_recipe.dart';
 // import 'package:recipe_application/views/chatRoomsScreen.dart';
 import 'package:recipe_application/widget/widget.dart';
 import 'package:flutter/material.dart';
@@ -61,13 +62,13 @@ class _SignInState extends State<SignIn> {
         // resizeToAvoidBottomInset: false,
         // appBar: appBarMain(context),
         body: SafeArea(
-            child: Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/images/backnew2.png'),
-          fit: BoxFit.cover,
-        ),
-      ),
+      //       child: Container(
+      // decoration: BoxDecoration(
+      //   image: DecorationImage(
+      //     image: AssetImage('assets/images/backnew2.png'),
+      //     fit: BoxFit.cover,
+      //   ),
+      // ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: isLoading
@@ -174,6 +175,6 @@ class _SignInState extends State<SignIn> {
                 ),
               ),
       ),
-    )));
+    ));
   }
 }

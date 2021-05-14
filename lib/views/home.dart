@@ -73,120 +73,118 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('Home')),
-        body: Expanded(
-          child: Column(
+      backgroundColor: Colors.white,
+      appBar: AppBar(title: Text('Home Shuffa')),
+      body: SingleChildScrollView(
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text('Publish Recipe', style: TextStyle(fontSize: 20.0)),
+          Row(
             children: [
-              Text('Publish Recipe', style: TextStyle(fontSize: 20.0)),
-              Row(
-                children: [
-                  Text('Cateogory'),
-                  DropdownButton(
-                      hint: Text('Choose Category'),
-                      value: chosenCategory,
-                      onChanged: (value) {
-                        setState(() {
-                          chosenCategory = value;
-                        });
-                      },
-                      items: _category.map((value) {
-                        return DropdownMenuItem(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList())
-                ],
-              ),
-              Text('Name of the Ingredients', style: TextStyle(fontSize: 20)),
-              TextField(
-                controller: recipeName,
-                style: simpleTextStyle(),
-                decoration: textFieldInputDecoration("Name"),
-              ),
-              Column(
-                children: [
-                  Text('Nutritional Informations'),
-                  Row(
-                    children: [
-                      Text('Calories'),
-                      TextField(),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text('Proteins'),
-                      TextField(),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text('Fats'),
-                      TextField(),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text('Carbs'),
-                      TextField(),
-                    ],
-                  ),
-                ],
-              ),
-              Column(
-                children: [
-                  Text('Ingredients'),
-                  ingredients.length == 0
-                      ? Row(
-                          children: [
-                            TextField(
-                              decoration: textFieldInputDecoration('Name of Ingredients'),
-                            ),
-                            TextField(
-                              decoration: textFieldInputDecoration('Quantity'),
-                            ),
-                            TextField(
-                              decoration: textFieldInputDecoration('Units'),
-                            )
-                          ],
-                        )
-                      : ListView.builder(
-                          itemCount: ingredients.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Container(
-                              child: Row(
-                            children: [
-                            Text('${ingredients[index].nameIngredients}'),
-                            Text('${ingredients[index].qtyIngredients}'),
-                            Text('${ingredients[index].units}')
-                          ],
-                              ),
-                            );
-                          }),
-                  GestureDetector(
-                    onTap: () {},
-                    child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 16),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          gradient: LinearGradient(
-                            colors: [
-                              const Color(0xff007EF4),
-                              const Color(0xff2A75BC)
-                            ],
-                          )),
-                      width: MediaQuery.of(context).size.width,
-                      child: Text(
-                        "Add Ingredients",
-                        style: biggerTextStyle(),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                ],
-              )
+              Text('Cateogory', style: TextStyle(fontSize: 20)),
+              SizedBox(width: 30.0),
+              DropdownButton(
+                  hint: Text('Choose Category'),
+                  value: chosenCategory,
+                  onChanged: (value) {
+                    setState(() {
+                      chosenCategory = value;
+                    });
+                  },
+                  items: _category.map((value) {
+                    return DropdownMenuItem(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList())
             ],
           ),
-        ));
+          Text('Name of the Ingredients', style: TextStyle(fontSize: 20)),
+          TextField(
+            controller: recipeName,
+          ),
+          Text('Nutritional Informations', style: TextStyle(fontSize: 20)),
+          Row(
+            children: [
+              Text('Calories', style: TextStyle(fontSize: 20)),
+              SizedBox(width: 30.0),
+              Container(width: 100.0, child: TextField()),
+            ],
+          ),
+          Row(
+            children: [
+              Text('Proteins', style: TextStyle(fontSize: 20)),
+              SizedBox(width: 30.0),
+              Container(width: 100.0, child: TextField()),
+            ],
+          ),
+          Row(
+            children: [
+              Text('Fats', style: TextStyle(fontSize: 20)),
+              SizedBox(width: 30.0),
+              Container(width: 100.0, child: TextField()),
+            ],
+          ),
+          Row(
+            children: [
+              Text('Carbs', style: TextStyle(fontSize: 20)),
+              SizedBox(width: 30.0),
+              Container(width: 100.0, child: TextField()),
+            ],
+          ),
+          Text('Ingredients', style: TextStyle(fontSize: 40)),
+          // ingredients.length == 0
+          //     ?
+          Row(
+            children: [
+            Container(width: 100.0, child: TextField(
+              decoration: InputDecoration(hintText: 'Name'),
+            )),
+             Container(width: 100.0, child: TextField(
+               decoration: InputDecoration(hintText: 'Qty')
+             )),
+             Container(width: 100.0, child: TextField(
+               decoration: InputDecoration(hintText: 'Units')
+             )),
+            ],
+          ),
+          // : ListView.builder(
+          //     itemCount: ingredients.length,
+          //     itemBuilder: (BuildContext context, int index) {
+          //       return Container(
+          //         child: Row(
+          //           children: [
+          //             Text(
+          //                 '${ingredients[index].nameIngredients}'),
+          //             Text(
+          //                 '${ingredients[index].qtyIngredients}'),
+          //             Text('${ingredients[index].units}')
+          //           ],
+          //         ),
+          //      );
+          //      }),
+          Padding(
+            padding: const EdgeInsets.only(left:100.0),
+            child: GestureDetector(
+              onTap: () {},
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 16),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    gradient: LinearGradient(
+                      colors: [const Color(0xff007EF4), const Color(0xff2A75BC)],
+                    )),
+                width: MediaQuery.of(context).size.width/4,
+                child: Text(
+                  " + Add Ingredients",
+                  style: biggerTextStyle(),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ),
+        ]),
+      ),
+    );
   }
 }
 

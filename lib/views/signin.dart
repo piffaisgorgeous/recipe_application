@@ -28,6 +28,7 @@ class _SignInState extends State<SignIn> {
   DatabaseMethods databaseMethods = new DatabaseMethods();
 
   singIn() async {
+    String username;
     if (formKey.currentState.validate()) {
       HelperFunctions.saveUserEmailSharedPreference(
           emailEditingController.text);
@@ -36,8 +37,11 @@ class _SignInState extends State<SignIn> {
           .getUserbyUserEmail(emailEditingController.text)
           .then((result) {
         snapshotUserInfo = result;
+        username=snapshotUserInfo.docs[0].data()["name"];
+        print(snapshotUserInfo.docs[0].data()["name"]);
         HelperFunctions.saveUserNameSharedPreference(
             snapshotUserInfo.docs[0].data()["name"]);
+            ;
       });
       setState(() {
         isLoading = true;
@@ -50,7 +54,8 @@ class _SignInState extends State<SignIn> {
         if (result != null) {
           HelperFunctions.saveUserLoggedInSharedPreference(true);
           Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => Home() ));
+              context, MaterialPageRoute(builder: (context) =>
+               PublishRecipe(userEmail:emailEditingController.text,userName: username) ));
         }
       });
     }

@@ -11,7 +11,7 @@ class DatabaseMethods {
   getUserbyUserEmail(String userEmail) async {
     return await FirebaseFirestore.instance
         .collection('users')
-        .where("name", isEqualTo: userEmail)
+        .where("email", isEqualTo: userEmail)
         .get();
   }
 
@@ -19,6 +19,20 @@ class DatabaseMethods {
     FirebaseFirestore.instance.collection('users').add(userMap).catchError((e) {
       print(e.toString());
     });
+  }
+
+   //Publish Recipe
+  uploadRecipeInfo(String category, String recipeName, userMap) {
+    FirebaseFirestore.instance.collection('recipe')
+    .doc('category')
+    .collection(category)
+    .doc(category)
+    .collection(recipeName)
+    .add(userMap)
+      .catchError((e) {
+      print(e.toString());
+    });
+
   }
 
   createChatRoom(String chatRoomId, chatRoomMap) {

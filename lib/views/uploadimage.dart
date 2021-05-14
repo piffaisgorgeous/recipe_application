@@ -19,6 +19,10 @@ import 'package:recipe_application/widget/button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
+// import 'package:recipe_application/widget/other/floating_action_button_widget.dart';
+// import 'package:recipe_application/widget/other/textfield_widget.dart';
+import 'package:recipe_application/widget/video_player_widget.dart';
+import 'package:video_player/video_player.dart';
 
 // class Home extends StatefulWidget {
 //   @override
@@ -35,18 +39,17 @@ import 'package:path/path.dart';
 //     );
 //   }
 // }
+String url;
 
-class Upload extends StatefulWidget {
+class Uploads extends StatefulWidget {
   @override
-  _UploadState createState() => _UploadState();
+  _UploadsState createState() => _UploadsState();
 }
 
-class _UploadState extends State<Upload> {
+class _UploadsState extends State<Uploads> {
   UploadTask task;
   File file;
-  String url;
 
-  
   Future selectFile() async {
     final result = await FilePicker.platform.pickFiles(allowMultiple: false);
 
@@ -93,18 +96,37 @@ class _UploadState extends State<Upload> {
         },
       );
 
+  // final textController = TextEditingController(text: url);
+  // VideoPlayerController controller;
+
+  // //static get urlLandscapeVideo => null;
+
+  // @override
+  // void initState() {
+  //   super.initState();
+
+  //   controller = VideoPlayerController.network(textController.text)
+  //     ..addListener(() => setState(() {}))
+  //     ..setLooping(true)
+  //     ..initialize().then((_) => controller.play());
+  // }
+
+  // @override
+  // void dispose() {
+  //   controller.dispose();
+  //   super.dispose();
+  // }
   @override
   Widget build(BuildContext context) {
     final fileName = file != null ? basename(file.path) : 'No File Selected';
 
     return Scaffold(
-    
       appBar: AppBar(
         title: Text("Upload Image/Video"),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-              child: Container(
+        child: Container(
           //height: MediaQuery.of(context).size.height,
           padding: EdgeInsets.all(32),
           child: Center(
@@ -129,10 +151,39 @@ class _UploadState extends State<Upload> {
                 ),
                 SizedBox(height: 20),
                 task != null ? buildUploadStatus(task) : Container(),
+                GestureDetector(
+                    onTap: () => uploadFile,
+                    child: Container(
+                      color: Colors.green,
+                      width: 100,
+                      height: 50,
+                      child: Text("show image"),
+                    )),
+                SizedBox(height: 20),
+                GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => NetworkPlayerWidget()),
+                      );
+                    },
+                    child: Container(
+                      color: Colors.green,
+                      width: 100,
+                      height: 50,
+                      child: Text("show video"),
+                    )),
                 Container(
-                //  height: MediaQuery.of(context).size.height,
-                  child: url==null? Text("peks") :Image.network(url),
+                  //  height: MediaQuery.of(context).size.height,
+                  child: url == null ? Container() : Image.network(url),
                 ),
+
+                //  Container(
+                // //  height: MediaQuery.of(context).size.height,
+                //   child: controller=="Empty"? Container() :
+                //     VideoPlayerWidget(controller: controller),
+                // ),
               ],
             ),
           ),
@@ -140,7 +191,6 @@ class _UploadState extends State<Upload> {
       ),
     );
   }
-
 }
 
 //
@@ -161,4 +211,65 @@ class Record {
 
   @override
   String toString() => "Record<$location:$url>";
+}
+
+class NetworkPlayerWidget extends StatefulWidget {
+  @override
+  _NetworkPlayerWidgetState createState() => _NetworkPlayerWidgetState();
+}
+
+class _NetworkPlayerWidgetState extends State<NetworkPlayerWidget> {
+  final textController = TextEditingController(text: url);
+  VideoPlayerController controller;
+
+  //static get urlLandscapeVideo => null;
+
+  @override
+  void initState() {
+    super.initState();
+
+    controller = VideoPlayerController.network(textController.text)
+      ..addListener(() => setState(() {}))
+      ..setLooping(true)
+      ..initialize().then((_) => controller.play());
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isMuted = controller.value.volume == 0;
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Video"),
+      ),
+      body: Container(
+        alignment: Alignment.center,
+        child: Column(
+          children: [
+            AspectRatio(
+                aspectRatio: controller.value.aspectRatio,
+                child: VideoPlayerWidget(controller: controller)),
+            const SizedBox(height: 32),
+            if (controller != null && controller.value.initialized)
+              CircleAvatar(
+                radius: 30,
+                backgroundColor: Colors.red,
+                child: IconButton(
+                  icon: Icon(
+                    isMuted ? Icons.volume_mute : Icons.volume_up,
+                    color: Colors.white,
+                  ),
+                  onPressed: () => controller.setVolume(isMuted ? 1 : 0),
+                ),
+              )
+          ],
+        ),
+      ),
+    );
+  }
 }

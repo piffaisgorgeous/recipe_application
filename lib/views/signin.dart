@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:recipe_application/helper/helperfunctions.dart';
 import 'package:recipe_application/services/auth.dart';
 import 'package:recipe_application/services/database.dart';
-import 'package:recipe_application/views/home.dart';
+//import 'package:recipe_application/views/home.dart';
 // import 'package:recipe_application/views/chatRoomsScreen.dart';
 import 'package:recipe_application/widget/widget.dart';
 import 'package:flutter/material.dart';
@@ -48,8 +48,8 @@ class _SignInState extends State<SignIn> {
           .then((result) {
         if (result != null) {
           HelperFunctions.saveUserLoggedInSharedPreference(true);
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => Home() ));
+          // Navigator.pushReplacement(
+          //     context, MaterialPageRoute(builder: (context) => Home() ));
         }
       });
     }

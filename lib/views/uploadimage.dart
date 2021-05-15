@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 
 import 'dart:math';
@@ -15,6 +17,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:recipe_application/api/firebase_api.dart';
+import 'package:recipe_application/widget/basic_overlay_widget.dart';
 import 'package:recipe_application/widget/button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -40,6 +43,7 @@ import 'package:video_player/video_player.dart';
 //   }
 // }
 String url;
+String typeString;
 
 class Uploads extends StatefulWidget {
   @override
@@ -96,8 +100,10 @@ class _UploadsState extends State<Uploads> {
         },
       );
 
-  // final textController = TextEditingController(text: url);
-  // VideoPlayerController controller;
+  TextEditingController textController;
+  VideoPlayerController controller;
+  // // var isMuted;
+  // // isMuted = controller.value.volume == 0;
 
   // //static get urlLandscapeVideo => null;
 
@@ -116,6 +122,17 @@ class _UploadsState extends State<Uploads> {
   //   controller.dispose();
   //   super.dispose();
   // }
+ Widget buildVideo() => Stack(
+        children: <Widget>[
+          buildVideoPlayer(),
+          Positioned.fill(child: BasicOverlayWidget(controller: controller)),
+        ],
+      );
+
+  Widget buildVideoPlayer() => AspectRatio(
+        aspectRatio: controller.value.aspectRatio,
+        child: VideoPlayer(controller),
+      );
   @override
   Widget build(BuildContext context) {
     final fileName = file != null ? basename(file.path) : 'No File Selected';
@@ -145,38 +162,97 @@ class _UploadsState extends State<Uploads> {
                 ),
                 SizedBox(height: 48),
                 ButtonWidget(
-                  text: 'Upload File',
-                  icon: Icons.cloud_upload_outlined,
-                  onClicked: uploadFile,
-                ),
+                    text: 'Upload File',
+                    icon: Icons.cloud_upload_outlined,
+                    onClicked: () {
+                      uploadFile();
+                    }),
                 SizedBox(height: 20),
                 task != null ? buildUploadStatus(task) : Container(),
                 GestureDetector(
-                    onTap: () => uploadFile,
-                    child: Container(
-                      color: Colors.green,
-                      width: 100,
-                      height: 50,
-                      child: Text("show image"),
-                    )),
-                SizedBox(height: 20),
-                GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => NetworkPlayerWidget()),
-                      );
+                      //                      Uri uri = Uri.parse(url);
+                      // String typeString = uri.path.substring(uri.path.length - 3).toLowerCase();
+                      //  if (typeString == "jpg" || typeString == "png"){
+
+                      //  }
+                      setState(() {
+                        uploadFile();
+                        Uri uri = Uri.parse(url);
+                        typeString = uri.path
+                            .substring(uri.path.length - 3)
+                            .toLowerCase();
+                        controller = VideoPlayerController.network(url)
+                          ..addListener(() => setState(() {}))
+                          ..setLooping(true)
+                          ..initialize().then((_) => controller.play());
+                        //  isMuted = controller.value.volume == 0;
+                      });
+                      typeString = null ;
+                          url = null;
+                          controller = null ;
+                          textController = null;
                     },
                     child: Container(
                       color: Colors.green,
                       width: 100,
                       height: 50,
-                      child: Text("show video"),
+                      child: Text("show"),
                     )),
+                SizedBox(height: 20),
+                // GestureDetector(
+                //     onTap: () {
+                //       Navigator.push(
+                //         context,
+                //         MaterialPageRoute(
+                //             builder: (context) => NetworkPlayerWidget()),
+                //       );
+                //     },
+                //     child: Container(
+                //       color: Colors.green,
+                //       width: 100,
+                //       height: 50,
+                //       child: Text("show video"),
+                //     )),
+                // Container(
+                //   //  height: MediaQuery.of(context).size.height,
+                //   child: url == null ? Container() : Image.network(url),
+                // ),
+
                 Container(
                   //  height: MediaQuery.of(context).size.height,
-                  child: url == null ? Container() : Image.network(url),
+                  child: typeString == null &&
+                          url == null &&
+                          controller == null &&
+                          textController == null
+                      ? Container()
+                      : typeString == "jpg" || typeString == "png"
+                          ? Image.network(url)
+                          : Container(
+                              alignment: Alignment.center,
+                              child: Column(
+                                children: [
+                                 Container(alignment: Alignment.topCenter, child: buildVideo()),
+                                  // const SizedBox(height: 32),
+                                  // if (controller != null &&
+                                  //     controller.value.initialized)
+                                  //   CircleAvatar(
+                                  //     radius: 30,
+                                  //     backgroundColor: Colors.red,
+                                  //     child: IconButton(
+                                  //       icon: Icon(
+                                  //         isMuted
+                                  //             ? Icons.volume_mute
+                                  //             : Icons.volume_up,
+                                  //         color: Colors.white,
+                                  //       ),
+                                  //       onPressed: () =>
+                                  //           controller.setVolume(isMuted ? 1 : 0),
+                                  //     ),
+                                  //   )
+                                ],
+                              ),
+                            ),
                 ),
 
                 //  Container(

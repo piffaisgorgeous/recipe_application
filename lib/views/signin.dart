@@ -122,7 +122,9 @@ class _SignInState extends State<SignIn> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        singIn();
+                       // singIn();
+                       Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => Home()));
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(vertical: 16),

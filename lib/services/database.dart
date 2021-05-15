@@ -21,6 +21,20 @@ class DatabaseMethods {
     });
   }
 
+  uploadRecipeInfo(String chosenCategory, String recipeName, userMap) {
+     FirebaseFirestore.instance.collection('recipes')
+     .doc('recipes')
+     .collection(chosenCategory)
+     .doc('category')
+     .collection(recipeName)
+     .doc()
+     .set(userMap)
+     .catchError((e) {
+      print(e.toString());
+    });
+
+  }
+
   createChatRoom(String chatRoomId, chatRoomMap) {
     FirebaseFirestore.instance
         .collection("ChatRoom")
@@ -36,11 +50,11 @@ class DatabaseMethods {
         .collection("ChatRoom")
         .doc(chatRoomId)
         .collection("chats")
-        .orderBy("time",descending : false)
+        .orderBy("time", descending: false)
         .snapshots();
   }
 
- addConversationMessages(String chatRoomId, messageMap) {
+  addConversationMessages(String chatRoomId, messageMap) {
     FirebaseFirestore.instance
         .collection("ChatRoom")
         .doc(chatRoomId)
@@ -51,16 +65,10 @@ class DatabaseMethods {
     });
   }
 
-
   getChatRooms(String userName) async {
     return await FirebaseFirestore.instance
         .collection("ChatRoom")
         .where("users", arrayContains: userName)
         .snapshots();
   }
-
-  
-
-
-
 }

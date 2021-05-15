@@ -13,6 +13,9 @@ class PublishRecipe extends StatefulWidget {
 class _PublishRecipeState extends State<PublishRecipe> {
   DatabaseMethods databaseMethods = new DatabaseMethods();
   TextEditingController recipeName = TextEditingController();
+  TextEditingController start_name_ingredients = new TextEditingController();
+  TextEditingController start_qty_ingredients = new TextEditingController();
+  TextEditingController start_units_ingredients = new TextEditingController();
   String chosenCategory, calories, fats, proteins, carbs;
   List _category = [
     'soup',
@@ -25,7 +28,21 @@ class _PublishRecipeState extends State<PublishRecipe> {
       "email": widget.userEmail,
       "user_name": widget.userName
     };
-    databaseMethods.uploadRecipeInfo(chosenCategory, recipeName.text, userMap);
+    if (ingredients.length == 0) {
+      ingredients.insert(
+          0,
+          Ingredients(
+              nameIngredients: start_name_ingredients.text,
+              qtyIngredients: double.parse(start_qty_ingredients.text),
+              units: start_units_ingredients.text));
+      databaseMethods.uploadRecipeInfo(
+          chosenCategory, recipeName.text, userMap);
+    }
+    else{
+       databaseMethods.uploadRecipeInfo(
+          chosenCategory, recipeName.text, userMap);
+
+    }
   }
 
   createDialog(BuildContext context) {
@@ -111,7 +128,7 @@ class _PublishRecipeState extends State<PublishRecipe> {
                   }).toList())
             ],
           ),
-          Text('Name of the Ingredients', style: TextStyle(fontSize: 20)),
+          Text('Name of the Recipe', style: TextStyle(fontSize: 20)),
           TextField(
             controller: recipeName,
           ),
@@ -151,15 +168,18 @@ class _PublishRecipeState extends State<PublishRecipe> {
                     Container(
                         width: 100.0,
                         child: TextField(
+                          controller: start_name_ingredients,
                           decoration: InputDecoration(hintText: 'Name'),
                         )),
                     Container(
                         width: 100.0,
                         child: TextField(
+                            controller: start_qty_ingredients,
                             decoration: InputDecoration(hintText: 'Qty'))),
                     Container(
                         width: 100.0,
                         child: TextField(
+                            controller: start_units_ingredients,
                             decoration: InputDecoration(hintText: 'Units'))),
                   ],
                 )

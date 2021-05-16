@@ -23,36 +23,54 @@ class DatabaseMethods {
 
   uploadRecipeInfo(String chosenCategory, String recipeName, userMap) {
      FirebaseFirestore.instance.collection('recipes')
-     .doc('recipes')
+     .doc('reccipes')
      .collection(chosenCategory)
-     .doc('category')
-     .collection(recipeName)
-     .doc()
+     .doc(recipeName)
      .set(userMap)
      .catchError((e) {
       print(e.toString());
     });
 
   }
-
-  createChatRoom(String chatRoomId, chatRoomMap) {
-    FirebaseFirestore.instance
-        .collection("ChatRoom")
-        .doc(chatRoomId)
-        .set(chatRoomMap)
-        .catchError((e) {
-      print(e.toString());
-    });
+  uploadRecipeandAuthor(recipeName,userMap)
+  {
+    FirebaseFirestore.instance.collection('recipeDetails').doc(recipeName)
+    .set(userMap);
   }
 
-  getConversationMessages(String chatRoomId) async {
-    return await FirebaseFirestore.instance
-        .collection("ChatRoom")
-        .doc(chatRoomId)
-        .collection("chats")
-        .orderBy("time", descending: false)
-        .snapshots();
+  uploadDetailsofRecipe(healthInfoMap,recipeName,chosenCategory,String useremail)
+  {
+    FirebaseFirestore.instance.collection('foods')
+    .doc(chosenCategory)
+    .collection(recipeName)
+    .doc('Health Information')
+    .set(healthInfoMap);
+    // FirebaseFirestore.instance.collection('recipeDetails').doc(recipeName)
+    // .collection('healthInfo').add(ingredientsInfo);
+    //  FirebaseFirestore.instance.collection('recipeDetails').doc(recipeName)
+    // .collection('healthInfo').add(recipeInfo);
+
+    
   }
+
+  // createChatRoom(String chatRoomId, chatRoomMap) {
+  //   FirebaseFirestore.instance
+  //       .collection("ChatRoom")
+  //       .doc(chatRoomId)
+  //       .set(chatRoomMap)
+  //       .catchError((e) {
+  //     print(e.toString());
+  //   });
+  // }
+
+  // getConversationMessages(String chatRoomId) async {
+  //   return await FirebaseFirestore.instance
+  //       .collection("ChatRoom")
+  //       .doc(chatRoomId)
+  //       .collection("chats")
+  //       .orderBy("time", descending: false)
+  //       .snapshots();
+  // }
 
   addConversationMessages(String chatRoomId, messageMap) {
     FirebaseFirestore.instance

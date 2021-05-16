@@ -16,6 +16,10 @@ class _PublishRecipeState extends State<PublishRecipe> {
   TextEditingController start_name_ingredients = new TextEditingController();
   TextEditingController start_qty_ingredients = new TextEditingController();
   TextEditingController start_units_ingredients = new TextEditingController();
+  TextEditingController tfcalories = new TextEditingController();
+  TextEditingController tfproteins = new TextEditingController();
+  TextEditingController tffats = new TextEditingController();
+  TextEditingController tfcarbs = new TextEditingController();
   String chosenCategory, calories, fats, proteins, carbs;
   List _category = [
     'soup',
@@ -28,11 +32,16 @@ class _PublishRecipeState extends State<PublishRecipe> {
       "email": widget.userEmail,
       "user_name": widget.userName
     };
-    
-       databaseMethods.uploadRecipeInfo(
-          chosenCategory, recipeName.text, userMap);
+    Map<String, dynamic> healthInfoMap = {
+      "calories": tfcalories.text,
+      "proteins": tfproteins.text,
+      "fats": tffats.text,
+      "carbs": tfcarbs
+    };
 
-    
+    databaseMethods.uploadRecipeInfo(chosenCategory, recipeName.text, userMap);
+    databaseMethods.uploadDetailsofRecipe(
+        healthInfoMap, recipeName, chosenCategory, widget.userEmail);
   }
 
   createDialog(BuildContext context) {
@@ -127,28 +136,28 @@ class _PublishRecipeState extends State<PublishRecipe> {
             children: [
               Text('Calories', style: TextStyle(fontSize: 20)),
               SizedBox(width: 30.0),
-              Container(width: 100.0, child: TextField()),
+              Container(width: 100.0, child: TextField(controller: tfcalories)),
             ],
           ),
           Row(
             children: [
               Text('Proteins', style: TextStyle(fontSize: 20)),
               SizedBox(width: 30.0),
-              Container(width: 100.0, child: TextField()),
+              Container(width: 100.0, child: TextField(controller: tfproteins)),
             ],
           ),
           Row(
             children: [
               Text('Fats', style: TextStyle(fontSize: 20)),
               SizedBox(width: 30.0),
-              Container(width: 100.0, child: TextField()),
+              Container(width: 100.0, child: TextField(controller: tffats)),
             ],
           ),
           Row(
             children: [
               Text('Carbs', style: TextStyle(fontSize: 20)),
               SizedBox(width: 30.0),
-              Container(width: 100.0, child: TextField()),
+              Container(width: 100.0, child: TextField(controller: tfcarbs)),
             ],
           ),
           Text('Ingredients', style: TextStyle(fontSize: 40)),
@@ -189,7 +198,7 @@ class _PublishRecipeState extends State<PublishRecipe> {
           Padding(
             padding: const EdgeInsets.only(left: 100.0),
             child: InkWell(
-                          child: GestureDetector(
+              child: GestureDetector(
                 onTap: () {
                   //createDialog(context);
                   publish();
@@ -251,5 +260,3 @@ class Ingredients {
   final String units;
   Ingredients({this.nameIngredients, this.qtyIngredients, this.units});
 }
-
-

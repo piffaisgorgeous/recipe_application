@@ -29,6 +29,8 @@ class _PublishRecipeState extends State<PublishRecipe> {
   ];
   List<Ingredients> ingredients = [];
 
+  TextEditingController start_name_recipe = new TextEditingController();
+
   publish() {
     String recipe_name = recipeName.text;
     Map<String, dynamic> userMap = {
@@ -41,9 +43,7 @@ class _PublishRecipeState extends State<PublishRecipe> {
       "fats": tffats.text,
       "carbs": tfcarbs.text
     };
-       Map<String, dynamic> ingredientsMap = {
-     "ing": ingredients
-    };
+    Map<String, dynamic> ingredientsMap = {"ing": ingredients};
     if (ingredients.length == 0) {
       ingredients.insert(
           0,
@@ -54,12 +54,12 @@ class _PublishRecipeState extends State<PublishRecipe> {
     }
 
     databaseMethods.uploadRecipeInfo(chosenCategory, recipe_name, userMap);
-    databaseMethods.uploadDetailsofRecipe(ingredientsMap,
-        healthInfoMap, recipe_name, chosenCategory, widget.userEmail);
+    databaseMethods.uploadDetailsofRecipe(ingredientsMap, healthInfoMap,
+        recipe_name, chosenCategory, widget.userEmail);
   }
 
   createDialog(BuildContext context) {
-     log("second");
+    log("second");
     TextEditingController name_ingredients = new TextEditingController();
     TextEditingController qty_ingredients = new TextEditingController();
     TextEditingController units_ingredients = new TextEditingController();
@@ -67,10 +67,9 @@ class _PublishRecipeState extends State<PublishRecipe> {
     return showDialog(
         context: context,
         builder: (context) {
-       log("third");
+          log("third");
 
           return AlertDialog(
-            
             title: Text('Ingredients'),
             // content: Expanded(
             //               child: Column(
@@ -149,6 +148,12 @@ class _PublishRecipeState extends State<PublishRecipe> {
                   }).toList())
             ],
           ),
+
+          //hakdog
+Container(
+
+),
+//hakdog
           Text('Name of the Recipe', style: TextStyle(fontSize: 20)),
           TextField(
             controller: recipeName,
@@ -205,7 +210,7 @@ class _PublishRecipeState extends State<PublishRecipe> {
                   ],
                 )
               : ListView.builder(
-                shrinkWrap: true,
+                  shrinkWrap: true,
                   itemCount: ingredients.length,
                   itemBuilder: (BuildContext context, int index) {
                     return Container(
@@ -247,6 +252,35 @@ class _PublishRecipeState extends State<PublishRecipe> {
               ),
             ),
           ),
+
+          Text('Recipe', style: TextStyle(fontSize: 40)),
+          //  ingredients.length == 0
+          //?
+          Row(
+            children: [
+              Container(
+                  width: 100.0,
+                  child: TextField(
+                    controller: start_name_recipe,
+                    decoration: InputDecoration(hintText: 'Recipe Name'),
+                  )),
+            ],
+          ),
+          // : ListView.builder(
+          //   shrinkWrap: true,
+          //     itemCount: ingredients.length,
+          //     itemBuilder: (BuildContext context, int index) {
+          //       return Container(
+          //         child: Row(
+          //           children: [
+          //             Text('${ingredients[index].nameIngredients}'),
+          //             Text('${ingredients[index].qtyIngredients}'),
+          //             Text('${ingredients[index].units}')
+          //           ],
+          //         ),
+          //       );
+          //     }),
+
           Padding(
             padding: const EdgeInsets.only(left: 100.0),
             child: GestureDetector(
@@ -265,7 +299,7 @@ class _PublishRecipeState extends State<PublishRecipe> {
                     )),
                 width: MediaQuery.of(context).size.width / 4,
                 child: Text(
-                  " Add Recipe",
+                  " Publish",
                   style: biggerTextStyle(),
                   textAlign: TextAlign.center,
                 ),

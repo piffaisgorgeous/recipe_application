@@ -2,11 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:recipe_application/helper/helperfunctions.dart';
 import 'package:recipe_application/services/auth.dart';
 import 'package:recipe_application/services/database.dart';
-import 'package:recipe_application/views/publishRecipe.dart';
-//import 'package:recipe_application/views/home.dart';
+import 'package:recipe_application/views/home.dart';
 // import 'package:recipe_application/views/chatRoomsScreen.dart';
 import 'package:recipe_application/widget/widget.dart';
 import 'package:flutter/material.dart';
+
+import '../main.dart';
 
 class SignIn extends StatefulWidget {
   final Function toggle;
@@ -28,7 +29,6 @@ class _SignInState extends State<SignIn> {
   DatabaseMethods databaseMethods = new DatabaseMethods();
 
   singIn() async {
-    String username;
     if (formKey.currentState.validate()) {
       HelperFunctions.saveUserEmailSharedPreference(
           emailEditingController.text);
@@ -39,7 +39,6 @@ class _SignInState extends State<SignIn> {
         snapshotUserInfo = result;
         HelperFunctions.saveUserNameSharedPreference(
             snapshotUserInfo.docs[0].data()["name"]);
-            username=snapshotUserInfo.docs[0].data()["name"];
       });
       setState(() {
         isLoading = true;
@@ -52,9 +51,7 @@ class _SignInState extends State<SignIn> {
         if (result != null) {
           HelperFunctions.saveUserLoggedInSharedPreference(true);
           Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => PublishRecipe(
-                userName:username, userEmail: emailEditingController.text
-              ) ));
+              context, MaterialPageRoute(builder: (context) => BottomNav()));
         }
       });
     }

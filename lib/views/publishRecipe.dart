@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:recipe_application/services/database.dart';
 import 'package:recipe_application/widget/widget.dart';
@@ -16,6 +18,10 @@ class _PublishRecipeState extends State<PublishRecipe> {
   TextEditingController start_name_ingredients = new TextEditingController();
   TextEditingController start_qty_ingredients = new TextEditingController();
   TextEditingController start_units_ingredients = new TextEditingController();
+  TextEditingController tfcalories = new TextEditingController();
+  TextEditingController tfproteins = new TextEditingController();
+  TextEditingController tffats = new TextEditingController();
+  TextEditingController tfcarbs = new TextEditingController();
   String chosenCategory, calories, fats, proteins, carbs;
   List _category = [
     'soup',
@@ -24,18 +30,36 @@ class _PublishRecipeState extends State<PublishRecipe> {
   List<Ingredients> ingredients = [];
 
   publish() {
+    String recipe_name = recipeName.text;
     Map<String, dynamic> userMap = {
       "email": widget.userEmail,
       "user_name": widget.userName
     };
-    
-       databaseMethods.uploadRecipeInfo(
-          chosenCategory, recipeName.text, userMap);
+    Map<String, dynamic> healthInfoMap = {
+      "calories": tfcalories.text,
+      "proteins": tfproteins.text,
+      "fats": tffats.text,
+      "carbs": tfcarbs.text
+    };
+       Map<String, dynamic> ingredientsMap = {
+     "ing": ingredients
+    };
+    if (ingredients.length == 0) {
+      ingredients.insert(
+          0,
+          Ingredients(
+              nameIngredients: start_name_ingredients.text,
+              qtyIngredients: double.parse(start_qty_ingredients.text),
+              units: start_units_ingredients.text));
+    }
 
-    
+    databaseMethods.uploadRecipeInfo(chosenCategory, recipe_name, userMap);
+    databaseMethods.uploadDetailsofRecipe(ingredientsMap,
+        healthInfoMap, recipe_name, chosenCategory, widget.userEmail);
   }
 
   createDialog(BuildContext context) {
+     log("second");
     TextEditingController name_ingredients = new TextEditingController();
     TextEditingController qty_ingredients = new TextEditingController();
     TextEditingController units_ingredients = new TextEditingController();
@@ -43,49 +67,56 @@ class _PublishRecipeState extends State<PublishRecipe> {
     return showDialog(
         context: context,
         builder: (context) {
+       log("third");
+
           return AlertDialog(
+            
             title: Text('Ingredients'),
-            content: Column(
-              children: [
-                TextField(
-                  controller: name_ingredients,
-                ),
-                Row(
-                  children: [
-                    TextField(controller: qty_ingredients),
-                    TextField(
-                      controller: units_ingredients,
-                    ),
-                  ],
-                )
-              ],
-            ),
-            actions: <Widget>[
-              MaterialButton(
-                  elevation: 5.0,
-                  child: Text('Done'),
-                  onPressed: () {
-                    length = ingredients.length;
-                    if (length != 0) {
-                      ingredients.insert(
-                          length,
-                          Ingredients(
-                              nameIngredients: name_ingredients.text,
-                              qtyIngredients:
-                                  double.parse(qty_ingredients.text),
-                              units: units_ingredients.text));
-                    } else {
-                      ingredients.insert(
-                          0,
-                          Ingredients(
-                              nameIngredients: name_ingredients.text,
-                              qtyIngredients:
-                                  double.parse(qty_ingredients.text),
-                              units: units_ingredients.text));
-                    }
-                    Navigator.pop(context);
-                  })
-            ],
+            // content: Expanded(
+            //               child: Column(
+            //     children: [
+            //       TextField(
+            //         controller: name_ingredients,
+            //       ),
+            //       Flexible(
+            //                         child: Row(
+            //           children: [
+            //             TextField(controller: qty_ingredients),
+            //             TextField(
+            //               controller: units_ingredients,
+            //             ),
+            //           ],
+            //         ),
+            //       )
+            //     ],
+            //   ),
+            // ),
+            // actions: <Widget>[
+            //   MaterialButton(
+            //       elevation: 5.0,
+            //       child: Text('Done'),
+            //       onPressed: () {
+            //         length = ingredients.length;
+            //         if (length != 0) {
+            //           ingredients.insert(
+            //               length,
+            //               Ingredients(
+            //                   nameIngredients: name_ingredients.text,
+            //                   qtyIngredients:
+            //                       double.parse(qty_ingredients.text),
+            //                   units: units_ingredients.text));
+            //         } else {
+            //           ingredients.insert(
+            //               0,
+            //               Ingredients(
+            //                   nameIngredients: name_ingredients.text,
+            //                   qtyIngredients:
+            //                       double.parse(qty_ingredients.text),
+            //                   units: units_ingredients.text));
+            //         }
+            //         Navigator.pop(context);
+            //       })
+            // ],
           );
         });
   }
@@ -127,28 +158,28 @@ class _PublishRecipeState extends State<PublishRecipe> {
             children: [
               Text('Calories', style: TextStyle(fontSize: 20)),
               SizedBox(width: 30.0),
-              Container(width: 100.0, child: TextField()),
+              Container(width: 100.0, child: TextField(controller: tfcalories)),
             ],
           ),
           Row(
             children: [
               Text('Proteins', style: TextStyle(fontSize: 20)),
               SizedBox(width: 30.0),
-              Container(width: 100.0, child: TextField()),
+              Container(width: 100.0, child: TextField(controller: tfproteins)),
             ],
           ),
           Row(
             children: [
               Text('Fats', style: TextStyle(fontSize: 20)),
               SizedBox(width: 30.0),
-              Container(width: 100.0, child: TextField()),
+              Container(width: 100.0, child: TextField(controller: tffats)),
             ],
           ),
           Row(
             children: [
               Text('Carbs', style: TextStyle(fontSize: 20)),
               SizedBox(width: 30.0),
-              Container(width: 100.0, child: TextField()),
+              Container(width: 100.0, child: TextField(controller: tfcarbs)),
             ],
           ),
           Text('Ingredients', style: TextStyle(fontSize: 40)),
@@ -174,6 +205,7 @@ class _PublishRecipeState extends State<PublishRecipe> {
                   ],
                 )
               : ListView.builder(
+                shrinkWrap: true,
                   itemCount: ingredients.length,
                   itemBuilder: (BuildContext context, int index) {
                     return Container(
@@ -189,10 +221,11 @@ class _PublishRecipeState extends State<PublishRecipe> {
           Padding(
             padding: const EdgeInsets.only(left: 100.0),
             child: InkWell(
-                          child: GestureDetector(
+              //splashColor: Colors.red,
+              child: GestureDetector(
                 onTap: () {
-                  //createDialog(context);
-                  publish();
+                  log("first");
+                  createDialog(context);
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 16),
@@ -251,5 +284,3 @@ class Ingredients {
   final String units;
   Ingredients({this.nameIngredients, this.qtyIngredients, this.units});
 }
-
-

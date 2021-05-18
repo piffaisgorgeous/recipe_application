@@ -23,7 +23,7 @@ class DatabaseMethods {
 
   uploadRecipeInfo(String chosenCategory, String recipeName, userMap) {
      FirebaseFirestore.instance.collection('recipes')
-     .doc('reccipes')
+     .doc('recipes')
      .collection(chosenCategory)
      .doc(recipeName)
      .set(userMap)
@@ -32,19 +32,26 @@ class DatabaseMethods {
     });
 
   }
-  uploadRecipeandAuthor(recipeName,userMap)
+   uploadDetailsofRecipe(ingredientsMap,healthInfoMap,String recipeName,String chosenCategory,String useremail)
   {
-    FirebaseFirestore.instance.collection('recipeDetails').doc(recipeName)
-    .set(userMap);
-  }
-
-  uploadDetailsofRecipe(healthInfoMap,recipeName,chosenCategory,String useremail)
-  {
-    FirebaseFirestore.instance.collection('foods')
-    .doc(chosenCategory)
-    .collection(recipeName)
-    .doc('Health Information')
-    .set(healthInfoMap);
+    FirebaseFirestore.instance.collection('recipes')
+    .doc('recipes')
+    .collection(chosenCategory)
+    .doc(recipeName)
+    .collection('Health Informations')
+    .add(ingredientsMap)
+    .catchError((e) {
+      print(e.toString());
+    });
+    FirebaseFirestore.instance.collection('recipes')
+    .doc('recipes')
+    .collection(chosenCategory)
+    .doc(recipeName)
+    .collection('Ingredients')
+    .add(healthInfoMap)
+    .catchError((e) {
+      print(e.toString());
+    });
     // FirebaseFirestore.instance.collection('recipeDetails').doc(recipeName)
     // .collection('healthInfo').add(ingredientsInfo);
     //  FirebaseFirestore.instance.collection('recipeDetails').doc(recipeName)
@@ -52,6 +59,13 @@ class DatabaseMethods {
 
     
   }
+  uploadRecipeandAuthor(recipeName,userMap)
+  {
+    FirebaseFirestore.instance.collection('recipeDetails').doc(recipeName)
+    .set(userMap);
+  }
+
+ 
 
   // createChatRoom(String chatRoomId, chatRoomMap) {
   //   FirebaseFirestore.instance

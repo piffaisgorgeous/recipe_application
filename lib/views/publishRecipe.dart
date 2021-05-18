@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:recipe_application/services/database.dart';
 import 'package:recipe_application/widget/widget.dart';
@@ -28,6 +30,7 @@ class _PublishRecipeState extends State<PublishRecipe> {
   List<Ingredients> ingredients = [];
 
   publish() {
+    String recipe_name = recipeName.text;
     Map<String, dynamic> userMap = {
       "email": widget.userEmail,
       "user_name": widget.userName
@@ -36,15 +39,27 @@ class _PublishRecipeState extends State<PublishRecipe> {
       "calories": tfcalories.text,
       "proteins": tfproteins.text,
       "fats": tffats.text,
-      "carbs": tfcarbs
+      "carbs": tfcarbs.text
     };
+       Map<String, dynamic> ingredientsMap = {
+     "ing": ingredients
+    };
+    if (ingredients.length == 0) {
+      ingredients.insert(
+          0,
+          Ingredients(
+              nameIngredients: start_name_ingredients.text,
+              qtyIngredients: double.parse(start_qty_ingredients.text),
+              units: start_units_ingredients.text));
+    }
 
-    databaseMethods.uploadRecipeInfo(chosenCategory, recipeName.text, userMap);
-    databaseMethods.uploadDetailsofRecipe(
-        healthInfoMap, recipeName, chosenCategory, widget.userEmail);
+    databaseMethods.uploadRecipeInfo(chosenCategory, recipe_name, userMap);
+    databaseMethods.uploadDetailsofRecipe(ingredientsMap,
+        healthInfoMap, recipe_name, chosenCategory, widget.userEmail);
   }
 
   createDialog(BuildContext context) {
+     log("second");
     TextEditingController name_ingredients = new TextEditingController();
     TextEditingController qty_ingredients = new TextEditingController();
     TextEditingController units_ingredients = new TextEditingController();
@@ -52,49 +67,56 @@ class _PublishRecipeState extends State<PublishRecipe> {
     return showDialog(
         context: context,
         builder: (context) {
+       log("third");
+
           return AlertDialog(
+            
             title: Text('Ingredients'),
-            content: Column(
-              children: [
-                TextField(
-                  controller: name_ingredients,
-                ),
-                Row(
-                  children: [
-                    TextField(controller: qty_ingredients),
-                    TextField(
-                      controller: units_ingredients,
-                    ),
-                  ],
-                )
-              ],
-            ),
-            actions: <Widget>[
-              MaterialButton(
-                  elevation: 5.0,
-                  child: Text('Done'),
-                  onPressed: () {
-                    length = ingredients.length;
-                    if (length != 0) {
-                      ingredients.insert(
-                          length,
-                          Ingredients(
-                              nameIngredients: name_ingredients.text,
-                              qtyIngredients:
-                                  double.parse(qty_ingredients.text),
-                              units: units_ingredients.text));
-                    } else {
-                      ingredients.insert(
-                          0,
-                          Ingredients(
-                              nameIngredients: name_ingredients.text,
-                              qtyIngredients:
-                                  double.parse(qty_ingredients.text),
-                              units: units_ingredients.text));
-                    }
-                    Navigator.pop(context);
-                  })
-            ],
+            // content: Expanded(
+            //               child: Column(
+            //     children: [
+            //       TextField(
+            //         controller: name_ingredients,
+            //       ),
+            //       Flexible(
+            //                         child: Row(
+            //           children: [
+            //             TextField(controller: qty_ingredients),
+            //             TextField(
+            //               controller: units_ingredients,
+            //             ),
+            //           ],
+            //         ),
+            //       )
+            //     ],
+            //   ),
+            // ),
+            // actions: <Widget>[
+            //   MaterialButton(
+            //       elevation: 5.0,
+            //       child: Text('Done'),
+            //       onPressed: () {
+            //         length = ingredients.length;
+            //         if (length != 0) {
+            //           ingredients.insert(
+            //               length,
+            //               Ingredients(
+            //                   nameIngredients: name_ingredients.text,
+            //                   qtyIngredients:
+            //                       double.parse(qty_ingredients.text),
+            //                   units: units_ingredients.text));
+            //         } else {
+            //           ingredients.insert(
+            //               0,
+            //               Ingredients(
+            //                   nameIngredients: name_ingredients.text,
+            //                   qtyIngredients:
+            //                       double.parse(qty_ingredients.text),
+            //                   units: units_ingredients.text));
+            //         }
+            //         Navigator.pop(context);
+            //       })
+            // ],
           );
         });
   }
@@ -183,6 +205,7 @@ class _PublishRecipeState extends State<PublishRecipe> {
                   ],
                 )
               : ListView.builder(
+                shrinkWrap: true,
                   itemCount: ingredients.length,
                   itemBuilder: (BuildContext context, int index) {
                     return Container(
@@ -198,10 +221,11 @@ class _PublishRecipeState extends State<PublishRecipe> {
           Padding(
             padding: const EdgeInsets.only(left: 100.0),
             child: InkWell(
+              //splashColor: Colors.red,
               child: GestureDetector(
                 onTap: () {
-                  //createDialog(context);
-                  publish();
+                  log("first");
+                  createDialog(context);
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 16),

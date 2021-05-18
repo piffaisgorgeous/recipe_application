@@ -1,8 +1,17 @@
 import 'dart:developer';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:recipe_application/services/database.dart';
+import 'package:recipe_application/widget/basic_overlay_widget.dart';
+import 'package:recipe_application/widget/button_widget.dart';
 import 'package:recipe_application/widget/widget.dart';
+
+import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:recipe_application/api/firebase_api.dart';
+import 'package:path/path.dart';
+import 'package:video_player/video_player.dart';
 
 class PublishRecipe extends StatefulWidget {
   final String userName;
@@ -12,7 +21,16 @@ class PublishRecipe extends StatefulWidget {
   _PublishRecipeState createState() => _PublishRecipeState();
 }
 
+String url = null;
+String typeString = null;
+
 class _PublishRecipeState extends State<PublishRecipe> {
+  UploadTask task;
+  File file;
+
+  TextEditingController textController;
+  VideoPlayerController controller;
+
   DatabaseMethods databaseMethods = new DatabaseMethods();
   TextEditingController recipeName = TextEditingController();
   TextEditingController start_name_ingredients = new TextEditingController();
@@ -120,8 +138,89 @@ class _PublishRecipeState extends State<PublishRecipe> {
         });
   }
 
+  Future selectFile() async {
+    final result = await FilePicker.platform.pickFiles(allowMultiple: false);
+
+    if (result == null) return;
+    final path = result.files.single.path;
+
+    setState(() => file = File(path));
+    uploadFile();
+  }
+
+  Future uploadFile() async {
+    if (file == null) return;
+
+    final fileName = basename(file.path);
+    final destination = 'files/$fileName';
+
+    task = FirebaseApi.uploadFile(destination, file);
+    setState(() {});
+
+    if (task == null) return;
+
+    final snapshot = await task.whenComplete(() {});
+    final urlDownload = await snapshot.ref.getDownloadURL();
+    //
+    url = urlDownload;
+
+    print('Download-Link: $urlDownload');
+
+         setState(() {
+                        //uploadFile();
+                        Uri uri = Uri.parse(url);
+                        typeString = uri.path
+                            .substring(uri.path.length - 3)
+                            .toLowerCase();
+                        controller = VideoPlayerController.network(url)
+                          ..addListener(() => setState(() {}))
+                          ..setLooping(false)
+                          ..initialize().then((_) => controller.play());
+                        //  isMuted = controller.value.volume == 0;
+                      });
+  }
+
+  Widget buildUploadStatus(UploadTask task) => StreamBuilder<TaskSnapshot>(
+        stream: task.snapshotEvents,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            final snap = snapshot.data;
+            final progress = snap.bytesTransferred / snap.totalBytes;
+            final percentage = (progress * 100).toStringAsFixed(2);
+
+            return Text(
+              '$percentage %',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            );
+          } else {
+            return Container();
+          }
+        },
+      );
+
+  Widget buildVideo() => Stack(
+        children: <Widget>[
+          buildVideoPlayer(),
+          Positioned.fill(child: BasicOverlayWidget(controller: controller)),
+        ],
+      );
+
+  Widget buildVideoPlayer() => AspectRatio(
+        aspectRatio: controller.value.aspectRatio,
+        child: VideoPlayer(controller),
+      );
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  ///need
+
   @override
   Widget build(BuildContext context) {
+    final fileName = file != null ? basename(file.path) : 'No File Selected';
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(title: Text('Home Shuffa')),
@@ -150,9 +249,61 @@ class _PublishRecipeState extends State<PublishRecipe> {
           ),
 
           //hakdog
-Container(
 
-),
+          Column(
+            children: [
+              Row(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      typeString = null;
+                      url = null;
+                      controller = null;
+                      textController = null;
+                      selectFile();
+                    },
+                    child: Container(
+                        width: 110,
+                        height: 50,
+                        color: Colors.orange,
+                        child: Center(
+                          child: Row(children: [
+                            Text('Select File'),
+                            Icon(
+                              Icons.attach_file,
+                            )
+                          ]),
+                        )),
+                  ),
+                    task != null ? buildUploadStatus(task) : Container(),
+              
+                ],
+              ),
+          
+              Container(
+                child: typeString == null &&
+                        url == null &&
+                        controller == null &&
+                        textController == null
+                    ? Container()
+                    : typeString == "jpg" || typeString == "png"
+                        ? AspectRatio(
+                           aspectRatio: controller.value.aspectRatio,
+                          child: Image.network(url))
+                        : Container(
+                            alignment: Alignment.center,
+                            child: Column(
+                              children: [
+                                Container(
+                                    alignment: Alignment.topCenter,
+                                    child: buildVideo()),
+                              ],
+                            ),
+                          ),
+              )
+            ],
+          ),
+
 //hakdog
           Text('Name of the Recipe', style: TextStyle(fontSize: 20)),
           TextField(

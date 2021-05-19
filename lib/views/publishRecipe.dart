@@ -89,51 +89,44 @@ class _PublishRecipeState extends State<PublishRecipe> {
 
           return AlertDialog(
             title: Text('Ingredients'),
-            // content: Expanded(
-            //               child: Column(
-            //     children: [
-            //       TextField(
-            //         controller: name_ingredients,
-            //       ),
-            //       Flexible(
-            //                         child: Row(
-            //           children: [
-            //             TextField(controller: qty_ingredients),
-            //             TextField(
-            //               controller: units_ingredients,
-            //             ),
-            //           ],
-            //         ),
-            //       )
-            //     ],
-            //   ),
-            // ),
-            // actions: <Widget>[
-            //   MaterialButton(
-            //       elevation: 5.0,
-            //       child: Text('Done'),
-            //       onPressed: () {
-            //         length = ingredients.length;
-            //         if (length != 0) {
-            //           ingredients.insert(
-            //               length,
-            //               Ingredients(
-            //                   nameIngredients: name_ingredients.text,
-            //                   qtyIngredients:
-            //                       double.parse(qty_ingredients.text),
-            //                   units: units_ingredients.text));
-            //         } else {
-            //           ingredients.insert(
-            //               0,
-            //               Ingredients(
-            //                   nameIngredients: name_ingredients.text,
-            //                   qtyIngredients:
-            //                       double.parse(qty_ingredients.text),
-            //                   units: units_ingredients.text));
-            //         }
-            //         Navigator.pop(context);
-            //       })
-            // ],
+            content: Column(
+              children: [
+                TextField(
+                  controller: name_ingredients,
+                ),
+                TextField(controller: qty_ingredients),
+                TextField(
+                 // autofillHints: [AutofillHints.email],
+                  controller: units_ingredients,
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              MaterialButton(
+                 // elevation: 5.0,
+                  child: Text('Done'),
+                  onPressed: () {
+                    length = ingredients.length;
+                    if (length != 0) {
+                      ingredients.insert(
+                          length,
+                          Ingredients(
+                              nameIngredients: name_ingredients.text,
+                              qtyIngredients:
+                                  double.parse(qty_ingredients.text),
+                              units: units_ingredients.text));
+                    } else {
+                      ingredients.insert(
+                          0,
+                          Ingredients(
+                              nameIngredients: name_ingredients.text,
+                              qtyIngredients:
+                                  double.parse(qty_ingredients.text),
+                              units: units_ingredients.text));
+                    }
+                    Navigator.pop(context);
+                  })
+            ],
           );
         });
   }
@@ -166,18 +159,16 @@ class _PublishRecipeState extends State<PublishRecipe> {
 
     print('Download-Link: $urlDownload');
 
-         setState(() {
-                        //uploadFile();
-                        Uri uri = Uri.parse(url);
-                        typeString = uri.path
-                            .substring(uri.path.length - 3)
-                            .toLowerCase();
-                        controller = VideoPlayerController.network(url)
-                          ..addListener(() => setState(() {}))
-                          ..setLooping(false)
-                          ..initialize().then((_) => controller.play());
-                        //  isMuted = controller.value.volume == 0;
-                      });
+    setState(() {
+      //uploadFile();
+      Uri uri = Uri.parse(url);
+      typeString = uri.path.substring(uri.path.length - 3).toLowerCase();
+      controller = VideoPlayerController.network(url)
+        ..addListener(() => setState(() {}))
+        ..setLooping(false)
+        ..initialize().then((_) => controller.play());
+      //  isMuted = controller.value.volume == 0;
+    });
   }
 
   Widget buildUploadStatus(UploadTask task) => StreamBuilder<TaskSnapshot>(
@@ -275,11 +266,9 @@ class _PublishRecipeState extends State<PublishRecipe> {
                           ]),
                         )),
                   ),
-                    task != null ? buildUploadStatus(task) : Container(),
-              
+                  task != null ? buildUploadStatus(task) : Container(),
                 ],
               ),
-          
               Container(
                 child: typeString == null &&
                         url == null &&
@@ -288,8 +277,8 @@ class _PublishRecipeState extends State<PublishRecipe> {
                     ? Container()
                     : typeString == "jpg" || typeString == "png"
                         ? AspectRatio(
-                           aspectRatio: controller.value.aspectRatio,
-                          child: Image.network(url))
+                            aspectRatio: controller.value.aspectRatio,
+                            child: Image.network(url))
                         : Container(
                             alignment: Alignment.center,
                             child: Column(

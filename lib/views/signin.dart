@@ -63,13 +63,15 @@ class _SignInState extends State<SignIn> {
         // resizeToAvoidBottomInset: false,
         // appBar: appBarMain(context),
         body: SafeArea(
-      //       child: Container(
-      // decoration: BoxDecoration(
-      //   image: DecorationImage(
-      //     image: AssetImage('assets/images/backnew2.png'),
-      //     fit: BoxFit.cover,
-      //   ),
-      // ),
+            child: Container(
+      decoration: BoxDecoration(
+          gradient: LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomRight,
+              colors: [
+            Colors.indigoAccent[100],
+            Colors.indigo,
+          ])),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: isLoading
@@ -103,7 +105,23 @@ class _SignInState extends State<SignIn> {
                             },
                             controller: emailEditingController,
                             style: simpleTextStyle(),
-                            decoration: textFieldInputDecoration("Email"),
+                            decoration: InputDecoration(
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(
+        color: Colors.indigo[800],
+      ),
+      borderRadius: BorderRadius.circular(10.0),
+    ),
+    hintText: 'Email',
+    hintStyle: TextStyle(
+      color: Colors.white,
+      fontSize: 18,
+      fontStyle: FontStyle.italic,
+    ),
+  )
+                          ),
+                          SizedBox(
+                            height: 10,
                           ),
                           TextFormField(
                             obscureText: true,
@@ -114,7 +132,20 @@ class _SignInState extends State<SignIn> {
                             },
                             style: simpleTextStyle(),
                             controller: passwordEditingController,
-                            decoration: textFieldInputDecoration("Password"),
+                            decoration: InputDecoration(
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(
+        color: Colors.indigo[800],
+      ),
+      borderRadius: BorderRadius.circular(10.0),
+    ),
+    hintText:'Password',
+    hintStyle: TextStyle(
+      color: Colors.white,
+      fontSize: 18,
+      fontStyle: FontStyle.italic,
+    ),
+  )
                           ),
                         ],
                       ),
@@ -176,6 +207,6 @@ class _SignInState extends State<SignIn> {
                 ),
               ),
       ),
-    ));
+    )));
   }
 }

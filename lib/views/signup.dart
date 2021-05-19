@@ -62,13 +62,15 @@ class _SignUpState extends State<SignUp> {
         //resizeToAvoidBottomInset: false,
         // appBar: appBarMain(context),
         body: SafeArea(
-      //       child: Container(
-      // decoration: BoxDecoration(
-      //   image: DecorationImage(
-      //     image: AssetImage('assets/images/backnew9.png'),
-      //     fit: BoxFit.cover,
-      //   ),
-      // ),
+            child: Container(
+    decoration: BoxDecoration(
+          gradient: LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomRight,
+              colors: [
+            Colors.indigoAccent[100],
+            Colors.indigo,
+          ])),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: isLoading
@@ -94,7 +96,23 @@ class _SignUpState extends State<SignUp> {
                                   ? "Enter Username 3+ characters"
                                   : null;
                             },
-                            decoration: textFieldInputDecoration("Username"),
+                            decoration: InputDecoration(
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(
+        color: Colors.indigo[800],
+      ),
+      borderRadius: BorderRadius.circular(10.0),
+    ),
+    hintText: 'Username',
+    hintStyle: TextStyle(
+      color: Colors.white,
+      fontSize: 18,
+      fontStyle: FontStyle.italic,
+    ),
+  )
+                          ),
+                          SizedBox(
+                            height: 10
                           ),
                           TextFormField(
                             controller: emailEditingController,
@@ -106,12 +124,41 @@ class _SignUpState extends State<SignUp> {
                                   ? null
                                   : "Enter correct email";
                             },
-                            decoration: textFieldInputDecoration("Email"),
+                            decoration: InputDecoration(
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(
+        color: Colors.indigo[800],
+      ),
+      borderRadius: BorderRadius.circular(10.0),
+    ),
+    hintText: 'Email',
+    hintStyle: TextStyle(
+      color: Colors.white,
+      fontSize: 18,
+      fontStyle: FontStyle.italic,
+    ),
+  )
+                          ),
+                          SizedBox(
+                            height: 10
                           ),
                           TextFormField(
                             obscureText: true,
                             style: simpleTextStyle(),
-                            decoration: textFieldInputDecoration("Password"),
+                            decoration: InputDecoration(
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(
+        color: Colors.indigo[800],
+      ),
+      borderRadius: BorderRadius.circular(10.0),
+    ),
+    hintText: 'Password',
+    hintStyle: TextStyle(
+      color: Colors.white,
+      fontSize: 18,
+      fontStyle: FontStyle.italic,
+    ),
+  ),
                             controller: passwordEditingController,
                             validator: (val) {
                               return val.length < 6
@@ -181,6 +228,6 @@ class _SignUpState extends State<SignUp> {
                 ),
               ),
       ),
-    ));
+    )));
   }
 }

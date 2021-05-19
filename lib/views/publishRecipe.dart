@@ -40,12 +40,15 @@ class _PublishRecipeState extends State<PublishRecipe> {
   TextEditingController tfproteins = new TextEditingController();
   TextEditingController tffats = new TextEditingController();
   TextEditingController tfcarbs = new TextEditingController();
+
   String chosenCategory, calories, fats, proteins, carbs;
   List _category = [
     'soup',
     'salad',
   ];
   List<Ingredients> ingredients = [];
+  List<String> ingr=[];
+  List <String> recipe=[];
 
   TextEditingController start_name_recipe = new TextEditingController();
 
@@ -61,23 +64,30 @@ class _PublishRecipeState extends State<PublishRecipe> {
       "fats": tffats.text,
       "carbs": tfcarbs.text
     };
-    Map<String, dynamic> ingredientsMap = {"ing": ingredients};
-    if (ingredients.length == 0) {
-      ingredients.insert(
-          0,
-          Ingredients(
-              nameIngredients: start_name_ingredients.text,
-              qtyIngredients: double.parse(start_qty_ingredients.text),
-              units: start_units_ingredients.text));
-    }
+   Map<String, dynamic> ingredientsMap = {"ing": ingr};
+   Map<String, dynamic> recipeMap = {"rec": recipe};
+    // if (ingredients.length == 0) {
+    //   ingredients.insert(
+    //       0,
+    //       Ingredients(
+    //           nameIngredients: start_name_ingredients.text,
+    //           qtyIngredients: double.parse(start_qty_ingredients.text),
+    //           units: start_units_ingredients.text));
+    //           databaseMethods.uploadRecipeInfo(chosenCategory, recipe_name, userMap);
+    // databaseMethods.uploadDetailsofRecipe(ingredientsMap, healthInfoMap,
+    //     recipe_name, chosenCategory, widget.userEmail);
+    // }
 //mao ni
+log('check');
     databaseMethods.uploadRecipeInfo(chosenCategory, recipe_name, userMap);
-    databaseMethods.uploadDetailsofRecipe(ingredientsMap, healthInfoMap,
+    databaseMethods.uploadDetailsofRecipe(ingredientsMap,recipeMap, healthInfoMap,
         recipe_name, chosenCategory, widget.userEmail);
+    log('amen');
   }
 
   createDialog(BuildContext context) {
-    log("second");
+    log(ingredients.length.toString());
+    
     TextEditingController name_ingredients = new TextEditingController();
     TextEditingController qty_ingredients = new TextEditingController();
     TextEditingController units_ingredients = new TextEditingController();
@@ -106,30 +116,88 @@ class _PublishRecipeState extends State<PublishRecipe> {
                   // elevation: 5.0,
                   child: Text('Done'),
                   onPressed: () {
-                    length = ingredients.length;
-                    if (length != 0) {
-                      ingredients.insert(
-                          length,
-                          Ingredients(
-                              nameIngredients: name_ingredients.text,
-                              qtyIngredients:
-                                  double.parse(qty_ingredients.text),
-                              units: units_ingredients.text));
-                    } else {
-                      ingredients.insert(
-                          0,
-                          Ingredients(
-                              nameIngredients: name_ingredients.text,
-                              qtyIngredients:
-                                  double.parse(qty_ingredients.text),
-                              units: units_ingredients.text));
-                    }
+                    length = ingr.length;
+                    // if (length != 0) {
+                    String ingred=name_ingredients.text;
+                   ingr.add(ingred);
+                    
+                    // } else {
+                    //   ingredients.insert(
+                    //       0,
+                    //       Ingredients(
+                    //           nameIngredients: name_ingredients.text,
+                    //           qtyIngredients:
+                    //               double.parse(qty_ingredients.text),
+                    //           units: units_ingredients.text));
+                    // }
+                  
                     Navigator.pop(context);
+                    setState(() {
+                      
+                    });
                   })
             ],
           );
         });
   }
+
+
+createDialogRecipe(BuildContext context) {
+
+    TextEditingController recipeSteps = new TextEditingController();
+    int length;
+    return showDialog(
+        context: context,
+        builder: (context) {
+
+          return AlertDialog(
+            title: Text('Recipe'),
+            content: Column(
+              children: [
+                TextField(
+                  controller: recipeSteps,
+                ),
+                
+              ],
+            ),
+            actions: <Widget>[
+              MaterialButton(
+                  // elevation: 5.0,
+                  child: Text('Done'),
+                  onPressed: () {
+                    length = recipe.length;
+                    // if (length != 0) {
+                    String rSteps=recipeSteps.text;
+                   recipe.add(rSteps);
+                    
+                    // } else {
+                    //   ingredients.insert(
+                    //       0,
+                    //       Ingredients(
+                    //           nameIngredients: name_ingredients.text,
+                    //           qtyIngredients:
+                    //               double.parse(qty_ingredients.text),
+                    //           units: units_ingredients.text));
+                    // }
+                  
+                    Navigator.pop(context);
+                    setState(() {
+                      
+                    });
+                  })
+            ],
+          );
+        });
+  }
+
+
+
+
+
+
+
+
+
 
   Future selectFile() async {
     final result = await FilePicker.platform.pickFiles(allowMultiple: false);
@@ -206,14 +274,15 @@ class _PublishRecipeState extends State<PublishRecipe> {
     controller.dispose();
     super.dispose();
   }
-
+//kani  piifff
+  
   ///need
 
   @override
   Widget build(BuildContext context) {
     final fileName = file != null ? basename(file.path) : 'No File Selected';
     return Scaffold(
-       backgroundColor: Colors.grey[300],
+      backgroundColor: Colors.grey[300],
       appBar: AppBar(
           backgroundColor: Colors.indigo[400],
           title: Text(
@@ -248,15 +317,14 @@ class _PublishRecipeState extends State<PublishRecipe> {
             Column(
               children: [
                 GestureDetector(
-                  onTap: () {
-                    typeString = null;
-                    url = null;
-                    controller = null;
-                    textController = null;
-                    selectFile();
-                  },
-                  child: containerDecoration("Upload Image/Video")
-                ),
+                    onTap: () {
+                      typeString = null;
+                      url = null;
+                      controller = null;
+                      textController = null;
+                      selectFile();
+                    },
+                    child: containerDecoration("Upload Image/Video")),
                 task != null ? buildUploadStatus(task) : Container(),
                 Container(
                   child: typeString == null &&
@@ -279,8 +347,7 @@ class _PublishRecipeState extends State<PublishRecipe> {
               padding: const EdgeInsets.all(10),
               child: TextField(
                   controller: recipeName,
-                  decoration: textFieldInputDecoration("Name of the Recipe")
-                  ),
+                  decoration: textFieldInputDecoration("Name of the Recipe")),
             ),
             Text('Nutritional Informations', style: TextStyle(fontSize: 25)),
             Row(
@@ -387,57 +454,57 @@ class _PublishRecipeState extends State<PublishRecipe> {
               padding: const EdgeInsets.all(8.0),
               child: Text('Ingredients', style: TextStyle(fontSize: 25)),
             ),
-            ingredients.length == 0
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 150,
-                        height: 70,
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: TextField(
-                              controller: start_name_ingredients,
-                              decoration:  textFieldInputDecoration("Name")
-                              ),
-                        ),
-                      ),
-                      Container(
-                        width: 100,
-                        height: 70,
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: TextField(
-                              keyboardType: TextInputType.number,
-                              controller: start_qty_ingredients,
-                              decoration: textFieldInputDecoration("Qty")
-                              ),
-                        ),
-                      ),
-                      Container(
-                        width: 100,
-                        height: 70,
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: TextField(
-                              keyboardType: TextInputType.number,
-                              controller: start_units_ingredients,
-                              decoration:textFieldInputDecoration("Units")
-                              ),
-                        ),
-                      ),
-                    ],
-                  )
+            ingr.length == 0
+            ?
+            Text('NO INGREDIENTS ADDED')
+                // ? Row(
+                //     mainAxisAlignment: MainAxisAlignment.center,
+                //     children: [
+                //       Container(
+                //         width: 150,
+                //         height: 70,
+                //         child: Padding(
+                //           padding: const EdgeInsets.all(10),
+                //           child: TextField(
+                //               controller: start_name_ingredients,
+                //               decoration: textFieldInputDecoration("Name")),
+                //         ),
+                //       ),
+                //       Container(
+                //         width: 100,
+                //         height: 70,
+                //         child: Padding(
+                //           padding: const EdgeInsets.all(10),
+                //           child: TextField(
+                //               keyboardType: TextInputType.number,
+                //               controller: start_qty_ingredients,
+                //               decoration: textFieldInputDecoration("Qty")),
+                //         ),
+                //       ),
+                //       Container(
+                //         width: 100,
+                //         height: 70,
+                //         child: Padding(
+                //           padding: const EdgeInsets.all(10),
+                //           child: TextField(
+                //               // keyboardType: TextInputType.number,
+                //               controller: start_units_ingredients,
+                //               decoration: textFieldInputDecoration("Units")),
+                //         ),
+                //       ),
+                //     ],
+                //   )
                 : ListView.builder(
                     shrinkWrap: true,
-                    itemCount: ingredients.length,
+                    itemCount: ingr.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Container(
-                        child: Row(
+                        child: Row( 
                           children: [
-                            Text('${ingredients[index].nameIngredients}'),
-                            Text('${ingredients[index].qtyIngredients}'),
-                            Text('${ingredients[index].units}')
+                            
+                             Text('${ingr[index]}'),
+                            // Text('${ingredients[index].qtyIngredients}'),
+                            // Text('${ingredients[index].units}')
                           ],
                         ),
                       );
@@ -447,33 +514,55 @@ class _PublishRecipeState extends State<PublishRecipe> {
               child: InkWell(
                 //splashColor: Colors.red,
                 child: GestureDetector(
-                  onTap: () {
-                    log("first");
-                    createDialog(context);
-                  },
-                  child: containerDecoration("Add Ingredients")
-                ),
+                    onTap: () {
+                      log("first");
+                      createDialog(context);
+                    },
+                    child: containerDecoration("Add Ingredients")),
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text('Recipe', style: TextStyle(fontSize: 25)),
             ),
+            recipe.length == 0
+            ?
+            Text('NO RECIPE ADDED')
+            : ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: recipe.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Container(
+                        child: Row( 
+                          children: [
+                            
+                             Text('${recipe[index]}'),
+                            // Text('${ingredients[index].qtyIngredients}'),
+                            // Text('${ingredients[index].units}')
+                          ],
+                        ),
+                      );
+                    }),
             Padding(
               padding: const EdgeInsets.all(10),
-              child: TextField(
-                  controller: start_name_recipe,
-                  decoration:  textFieldInputDecoration("Recipe Steps")
-                  ),
+              child: InkWell(
+                //splashColor: Colors.red,
+                child: GestureDetector(
+                    onTap: () {
+                      // log("first");
+                      createDialogRecipe(context);
+                    },
+                    child: containerDecoration("Add Recipe/Steps")),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(10),
               child: GestureDetector(
-                onTap: () {
-                  publish();
-                },
-                child: containerDecoration("Publish")
-              ),
+                  onTap: () {
+                  
+                    publish();
+                  },
+                  child: containerDecoration("Publish")),
             ),
           ]),
         ),
@@ -488,3 +577,5 @@ class Ingredients {
   final String units;
   Ingredients({this.nameIngredients, this.qtyIngredients, this.units});
 }
+
+

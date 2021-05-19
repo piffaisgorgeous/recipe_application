@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DatabaseMethods {
@@ -22,6 +24,7 @@ class DatabaseMethods {
   }
 //mao ni
   uploadRecipeInfo(String chosenCategory, String recipeName, userMap) {
+    // log('tabang');
      FirebaseFirestore.instance.collection('recipes')
      .doc('recipes')
      .collection(chosenCategory)
@@ -32,14 +35,14 @@ class DatabaseMethods {
     });
 
   }
-   uploadDetailsofRecipe(ingredientsMap,healthInfoMap,String recipeName,String chosenCategory,String useremail)
+   uploadDetailsofRecipe(ingredientsMap,recipeMap,healthInfoMap,String recipeName,String chosenCategory,String useremail)
   {
     FirebaseFirestore.instance.collection('recipes')
     .doc('recipes')
     .collection(chosenCategory)
     .doc(recipeName)
     .collection('Health Informations')
-    .add(ingredientsMap)
+    .add(healthInfoMap)
     .catchError((e) {
       print(e.toString());
     });
@@ -48,10 +51,24 @@ class DatabaseMethods {
     .collection(chosenCategory)
     .doc(recipeName)
     .collection('Ingredients')
-    .add(healthInfoMap)
+    .add(ingredientsMap)
     .catchError((e) {
       print(e.toString());
     });
+
+     FirebaseFirestore.instance.collection('recipes')
+    .doc('recipes')
+    .collection(chosenCategory)
+    .doc(recipeName)
+    .collection('Recipe')
+    .add(recipeMap)
+    .catchError((e) {
+      print(e.toString());
+    });
+
+
+
+
     // FirebaseFirestore.instance.collection('recipeDetails').doc(recipeName)
     // .collection('healthInfo').add(ingredientsInfo);
     //  FirebaseFirestore.instance.collection('recipeDetails').doc(recipeName)

@@ -13,26 +13,37 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.yellow,
         appBar: AppBar(
           centerTitle: true,
-          title: Text('Publish Recipe'),
-          backgroundColor: Colors.grey,
+          title: Text('Recipes'),
+          backgroundColor: Colors.indigo[400],
         ),
-        body: new SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              Container(
-                color: Colors.black,
-                child: Text('PICTURE AND VIDEO'),
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              Container()
-            ],
-            // ),
-          ),
-        ));
+        body: SafeArea(
+            child: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomRight,
+                  colors: [
+                Colors.indigoAccent[100],
+                Colors.indigo,
+              ])),
+        ))
+        // new SingleChildScrollView(
+        //   child: Column(
+        //     children: <Widget>[
+        //       Container(
+        //         // color: Colors.black,
+        //         // child: Text('PICTURE AND VIDEO'),
+        //       ),
+        //       SizedBox(
+        //         height: 15,
+        //       ),
+        //       Container()
+        //     ],
+        //     // ),
+        //   ),
+        // )
+        );
   }
 }

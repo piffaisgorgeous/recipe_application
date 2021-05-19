@@ -70,7 +70,7 @@ class _PublishRecipeState extends State<PublishRecipe> {
               qtyIngredients: double.parse(start_qty_ingredients.text),
               units: start_units_ingredients.text));
     }
-
+//mao ni
     databaseMethods.uploadRecipeInfo(chosenCategory, recipe_name, userMap);
     databaseMethods.uploadDetailsofRecipe(ingredientsMap, healthInfoMap,
         recipe_name, chosenCategory, widget.userEmail);
@@ -96,14 +96,14 @@ class _PublishRecipeState extends State<PublishRecipe> {
                 ),
                 TextField(controller: qty_ingredients),
                 TextField(
-                 // autofillHints: [AutofillHints.email],
+                  // autofillHints: [AutofillHints.email],
                   controller: units_ingredients,
                 ),
               ],
             ),
             actions: <Widget>[
               MaterialButton(
-                 // elevation: 5.0,
+                  // elevation: 5.0,
                   child: Text('Done'),
                   onPressed: () {
                     length = ingredients.length;
@@ -213,16 +213,23 @@ class _PublishRecipeState extends State<PublishRecipe> {
   Widget build(BuildContext context) {
     final fileName = file != null ? basename(file.path) : 'No File Selected';
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(title: Text('Home Shuffa')),
+       backgroundColor: Colors.grey[300],
+      appBar: AppBar(
+          backgroundColor: Colors.indigo[400],
+          title: Text(
+            'Publish Recipe',
+            style: TextStyle(color: Colors.white),
+          )),
       body: SingleChildScrollView(
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text('Publish Recipe', style: TextStyle(fontSize: 20.0)),
-          Row(
-            children: [
-              Text('Cateogory', style: TextStyle(fontSize: 20)),
-              SizedBox(width: 30.0),
-              DropdownButton(
+        child: Padding(
+          padding: EdgeInsets.only(top: 10),
+          child: Column(children: [
+            Text('Category', style: TextStyle(fontSize: 25)),
+            SizedBox(height: 5),
+            DropdownButtonHideUnderline(
+              child: DropdownButton(
+                  elevation: 10,
+                  autofocus: true,
                   hint: Text('Choose Category'),
                   value: chosenCategory,
                   onChanged: (value) {
@@ -230,223 +237,246 @@ class _PublishRecipeState extends State<PublishRecipe> {
                       chosenCategory = value;
                     });
                   },
+                  dropdownColor: Colors.indigo[100],
                   items: _category.map((value) {
                     return DropdownMenuItem(
                       value: value,
                       child: Text(value),
                     );
-                  }).toList())
-            ],
-          ),
-
-          //hakdog
-
-          Column(
-            children: [
-              Row(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      typeString = null;
-                      url = null;
-                      controller = null;
-                      textController = null;
-                      selectFile();
-                    },
-                    child: Container(
-                        width: 110,
-                        height: 50,
-                        color: Colors.orange,
-                        child: Center(
-                          child: Row(children: [
-                            Text('Select File'),
-                            Icon(
-                              Icons.attach_file,
-                            )
-                          ]),
-                        )),
-                  ),
-                  task != null ? buildUploadStatus(task) : Container(),
-                ],
-              ),
-              Container(
-                child: typeString == null &&
-                        url == null &&
-                        controller == null &&
-                        textController == null
-                    ? Container()
-                    : typeString == "jpg" || typeString == "png"
-                        ? AspectRatio(
-                            aspectRatio: controller.value.aspectRatio,
-                            child: Image.network(url))
-                        : Container(
-                            alignment: Alignment.center,
-                            child: Column(
-                              children: [
-                                Container(
-                                    alignment: Alignment.topCenter,
-                                    child: buildVideo()),
-                              ],
-                            ),
-                          ),
-              )
-            ],
-          ),
-
-//hakdog
-          Text('Name of the Recipe', style: TextStyle(fontSize: 20)),
-          TextField(
-            controller: recipeName,
-          ),
-          Text('Nutritional Informations', style: TextStyle(fontSize: 20)),
-          Row(
-            children: [
-              Text('Calories', style: TextStyle(fontSize: 20)),
-              SizedBox(width: 30.0),
-              Container(width: 100.0, child: TextField(controller: tfcalories)),
-            ],
-          ),
-          Row(
-            children: [
-              Text('Proteins', style: TextStyle(fontSize: 20)),
-              SizedBox(width: 30.0),
-              Container(width: 100.0, child: TextField(controller: tfproteins)),
-            ],
-          ),
-          Row(
-            children: [
-              Text('Fats', style: TextStyle(fontSize: 20)),
-              SizedBox(width: 30.0),
-              Container(width: 100.0, child: TextField(controller: tffats)),
-            ],
-          ),
-          Row(
-            children: [
-              Text('Carbs', style: TextStyle(fontSize: 20)),
-              SizedBox(width: 30.0),
-              Container(width: 100.0, child: TextField(controller: tfcarbs)),
-            ],
-          ),
-          Text('Ingredients', style: TextStyle(fontSize: 40)),
-          ingredients.length == 0
-              ? Row(
-                  children: [
-                    Container(
-                        width: 100.0,
-                        child: TextField(
-                          controller: start_name_ingredients,
-                          decoration: InputDecoration(hintText: 'Name'),
-                        )),
-                    Container(
-                        width: 100.0,
-                        child: TextField(
-                            controller: start_qty_ingredients,
-                            decoration: InputDecoration(hintText: 'Qty'))),
-                    Container(
-                        width: 100.0,
-                        child: TextField(
-                            controller: start_units_ingredients,
-                            decoration: InputDecoration(hintText: 'Units'))),
-                  ],
+                  }).toList()),
+            ),
+            Column(
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    typeString = null;
+                    url = null;
+                    controller = null;
+                    textController = null;
+                    selectFile();
+                  },
+                  child: containerDecoration("Upload Image/Video")
+                ),
+                task != null ? buildUploadStatus(task) : Container(),
+                Container(
+                  child: typeString == null &&
+                          url == null &&
+                          controller == null &&
+                          textController == null
+                      ? Container()
+                      : typeString == "jpg" || typeString == "png"
+                          ? AspectRatio(
+                              aspectRatio: controller.value.aspectRatio,
+                              child: Image.network(url))
+                          : Container(
+                              // color: Colors.green,
+                              alignment: Alignment.topCenter,
+                              child: buildVideo()),
                 )
-              : ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: ingredients.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                      child: Row(
-                        children: [
-                          Text('${ingredients[index].nameIngredients}'),
-                          Text('${ingredients[index].qtyIngredients}'),
-                          Text('${ingredients[index].units}')
-                        ],
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: TextField(
+                  controller: recipeName,
+                  decoration: textFieldInputDecoration("Name of the Recipe")
+                  ),
+            ),
+            Text('Nutritional Informations', style: TextStyle(fontSize: 25)),
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('Calories', style: TextStyle(fontSize: 18)),
+                ),
+                SizedBox(width: 50.0),
+                Container(
+                  height: 50,
+                  width: 100,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: TextField(
+                      keyboardType: TextInputType.number,
+                      controller: tfcalories,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
                       ),
-                    );
-                  }),
-          Padding(
-            padding: const EdgeInsets.only(left: 100.0),
-            child: InkWell(
-              //splashColor: Colors.red,
+                    ),
+                  ),
+                )
+              ],
+            ),
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('Proteins', style: TextStyle(fontSize: 18)),
+                ),
+                SizedBox(width: 50.0),
+                Container(
+                  height: 50,
+                  width: 100,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: TextField(
+                      keyboardType: TextInputType.number,
+                      controller: tfproteins,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('Fats', style: TextStyle(fontSize: 18)),
+                ),
+                SizedBox(width: 85.0),
+                Container(
+                  height: 50,
+                  width: 100,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: TextField(
+                      keyboardType: TextInputType.number,
+                      controller: tffats,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('Carbs', style: TextStyle(fontSize: 18)),
+                ),
+                SizedBox(width: 75.0),
+                Container(
+                  height: 50,
+                  width: 100,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: TextField(
+                      keyboardType: TextInputType.number,
+                      controller: tfcarbs,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text('Ingredients', style: TextStyle(fontSize: 25)),
+            ),
+            ingredients.length == 0
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 150,
+                        height: 70,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: TextField(
+                              controller: start_name_ingredients,
+                              decoration:  textFieldInputDecoration("Name")
+                              ),
+                        ),
+                      ),
+                      Container(
+                        width: 100,
+                        height: 70,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: TextField(
+                              keyboardType: TextInputType.number,
+                              controller: start_qty_ingredients,
+                              decoration: textFieldInputDecoration("Qty")
+                              ),
+                        ),
+                      ),
+                      Container(
+                        width: 100,
+                        height: 70,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: TextField(
+                              keyboardType: TextInputType.number,
+                              controller: start_units_ingredients,
+                              decoration:textFieldInputDecoration("Units")
+                              ),
+                        ),
+                      ),
+                    ],
+                  )
+                : ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: ingredients.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Container(
+                        child: Row(
+                          children: [
+                            Text('${ingredients[index].nameIngredients}'),
+                            Text('${ingredients[index].qtyIngredients}'),
+                            Text('${ingredients[index].units}')
+                          ],
+                        ),
+                      );
+                    }),
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: InkWell(
+                //splashColor: Colors.red,
+                child: GestureDetector(
+                  onTap: () {
+                    log("first");
+                    createDialog(context);
+                  },
+                  child: containerDecoration("Add Ingredients")
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text('Recipe', style: TextStyle(fontSize: 25)),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: TextField(
+                  controller: start_name_recipe,
+                  decoration:  textFieldInputDecoration("Recipe Steps")
+                  ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10),
               child: GestureDetector(
                 onTap: () {
-                  log("first");
-                  createDialog(context);
+                  publish();
                 },
-                child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 16),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                      gradient: LinearGradient(
-                        colors: [
-                          const Color(0xff007EF4),
-                          const Color(0xff2A75BC)
-                        ],
-                      )),
-                  width: MediaQuery.of(context).size.width / 4,
-                  child: Text(
-                    " Add Ingredients",
-                    style: biggerTextStyle(),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
+                child: containerDecoration("Publish")
               ),
             ),
-          ),
-
-          Text('Recipe', style: TextStyle(fontSize: 40)),
-          //  ingredients.length == 0
-          //?
-          Row(
-            children: [
-              Container(
-                  width: 100.0,
-                  child: TextField(
-                    controller: start_name_recipe,
-                    decoration: InputDecoration(hintText: 'Recipe Name'),
-                  )),
-            ],
-          ),
-          // : ListView.builder(
-          //   shrinkWrap: true,
-          //     itemCount: ingredients.length,
-          //     itemBuilder: (BuildContext context, int index) {
-          //       return Container(
-          //         child: Row(
-          //           children: [
-          //             Text('${ingredients[index].nameIngredients}'),
-          //             Text('${ingredients[index].qtyIngredients}'),
-          //             Text('${ingredients[index].units}')
-          //           ],
-          //         ),
-          //       );
-          //     }),
-
-          Padding(
-            padding: const EdgeInsets.only(left: 100.0),
-            child: GestureDetector(
-              onTap: () {
-                publish();
-              },
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: 16),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    gradient: LinearGradient(
-                      colors: [
-                        const Color(0xff007EF4),
-                        const Color(0xff2A75BC)
-                      ],
-                    )),
-                width: MediaQuery.of(context).size.width / 4,
-                child: Text(
-                  " Publish",
-                  style: biggerTextStyle(),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
-          ),
-        ]),
+          ]),
+        ),
       ),
     );
   }

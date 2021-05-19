@@ -1,22 +1,5 @@
 import 'package:flutter/material.dart';
 
-Widget appBarMain(BuildContext context) {
-  return AppBar(
-    title: Text("PPB"),
-    elevation: 0.0,
-    centerTitle: false,
-  );
-}
-
-InputDecoration textFieldInputDecoration(String hintText) {
-  return InputDecoration(
-      hintText: hintText,
-      hintStyle: TextStyle(color: Colors.white54),
-      focusedBorder:
-          UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)),
-      enabledBorder:
-          UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)));
-}
 
 TextStyle simpleTextStyle() {
   return TextStyle(color: Colors.white, fontSize: 16);
@@ -24,4 +7,39 @@ TextStyle simpleTextStyle() {
 
 TextStyle biggerTextStyle() {
   return TextStyle(color: Colors.white, fontSize: 17);
+}
+
+InputDecoration textFieldInputDecoration(String hintText) {
+  return InputDecoration(
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(
+        color: Colors.indigo[800],
+      ),
+      borderRadius: BorderRadius.circular(10.0),
+    ),
+    hintText: hintText,
+    hintStyle: TextStyle(
+      fontSize: 18,
+      fontStyle: FontStyle.italic,
+    ),
+  );
+}
+
+
+
+Container containerDecoration(String text) {
+  return Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        gradient: LinearGradient(
+                          colors: [Colors.indigoAccent[100], Colors.indigo],
+                        )),
+                    width: 160,
+                    height: 50,
+                    child: Center(
+                        child: Text(
+                      text,
+                      style: TextStyle(fontSize: 15),
+                    )),
+                  );
 }

@@ -20,7 +20,7 @@ class DatabaseMethods {
       print(e.toString());
     });
   }
-
+//mao ni
   uploadRecipeInfo(String chosenCategory, String recipeName, userMap) {
      FirebaseFirestore.instance.collection('recipes')
      .doc('recipes')

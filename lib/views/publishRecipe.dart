@@ -40,6 +40,7 @@ class _PublishRecipeState extends State<PublishRecipe> {
   TextEditingController tfproteins = new TextEditingController();
   TextEditingController tffats = new TextEditingController();
   TextEditingController tfcarbs = new TextEditingController();
+  TextEditingController start_name_recipe = new TextEditingController();
 
   String chosenCategory, calories, fats, proteins, carbs;
   List _category = [
@@ -50,8 +51,53 @@ class _PublishRecipeState extends State<PublishRecipe> {
   List<String> ingr = [];
   List<String> recipe = [];
 
-  TextEditingController start_name_recipe = new TextEditingController();
+  Future selectFile() async {
+    final result = await FilePicker.platform.pickFiles(allowMultiple: false);
 
+    if (result == null) return;
+    final path = result.files.single.path;
+
+    setState(() => file = File(path));
+    uploadFile();
+  }
+
+  Future uploadFile() async {
+    if (file == null) return;
+
+    final fileName = basename(file.path);
+    final destination = 'files/$fileName';
+
+    task = FirebaseApi.uploadFile(destination, file);
+    setState(() {});
+
+    if (task == null) return;
+
+    final snapshot = await task.whenComplete(() {});
+    final urlDownload = await snapshot.ref.getDownloadURL();
+    //
+    url = urlDownload;
+
+    print('Download-Link: $urlDownload');
+
+    setState(() {
+      //uploadFile();
+      Uri uri = Uri.parse(url);
+      typeString = uri.path.substring(uri.path.length - 3).toLowerCase();
+      controller = VideoPlayerController.network(url)
+        ..addListener(() => setState(() {}))
+        ..setLooping(false)
+        ..initialize().then((_) => controller.play());
+      //  isMuted = controller.value.volume == 0;
+    });
+  }
+// clearimage() {
+//     setState(() {
+//     typeString = null;
+//       url = null;
+//       controller = null;
+//       textController = null;
+//     });
+//   }
   publish() {
     String recipe_name = recipeName.text;
     Map<String, dynamic> userMap = {
@@ -62,7 +108,8 @@ class _PublishRecipeState extends State<PublishRecipe> {
       "calories": tfcalories.text,
       "proteins": tfproteins.text,
       "fats": tffats.text,
-      "carbs": tfcarbs.text
+      "carbs": tfcarbs.text,
+      "upload": url
     };
     Map<String, dynamic> ingredientsMap = {"ing": ingr};
     Map<String, dynamic> recipeMap = {"rec": recipe};
@@ -83,6 +130,37 @@ class _PublishRecipeState extends State<PublishRecipe> {
     databaseMethods.uploadDetailsofRecipe(ingredientsMap, recipeMap,
         healthInfoMap, recipe_name, chosenCategory, widget.userEmail);
     log('amen');
+   // clearimage();
+    // typeString = null;
+    // url = null;
+    // controller = null;
+    // textController = null;
+    //ingredients = null;
+    //String emp ="";
+chosenCategory=null;
+    setState(() {
+      //chosenCategory=null;
+      //ingr = [null];
+      ingr.length = 0;
+      // recipe = [null];
+      recipe.length = 0;
+      // chosenCategory = "Choose Category";
+      // _category = [""];
+    });
+
+    recipeName.text = "";
+    start_name_ingredients.text = "";
+    start_qty_ingredients.text = "";
+    start_units_ingredients.text = "";
+    tfcalories.text = "";
+    tfproteins.text = "";
+    tffats.text = "";
+    tfcarbs.text = "";
+
+    // ingr.removeAll();
+    // recipe.removeAll();
+
+    log('done');
   }
 
   createDialog(BuildContext context) {
@@ -125,11 +203,17 @@ class _PublishRecipeState extends State<PublishRecipe> {
                   onPressed: () {
                     if (name_ingredients.text == null ||
                         name_ingredients.text == "") {
-                      Navigator.pop(context);
-                      log("chuchu");
+                      setState(() {
+                        Navigator.pop(context);
+                        log("chuchu");
+                      });
                     } else {
                       length = ingr.length;
-                      String ingred = name_ingredients.text;
+                      String ingred = name_ingredients.text +
+                          " " +
+                          qty_ingredients.text +
+                          " " +
+                          units_ingredients.text;
                       ingr.add(ingred);
 
                       Navigator.pop(context);
@@ -178,46 +262,6 @@ class _PublishRecipeState extends State<PublishRecipe> {
             ],
           );
         });
-  }
-
-  Future selectFile() async {
-    final result = await FilePicker.platform.pickFiles(allowMultiple: false);
-
-    if (result == null) return;
-    final path = result.files.single.path;
-
-    setState(() => file = File(path));
-    uploadFile();
-  }
-
-  Future uploadFile() async {
-    if (file == null) return;
-
-    final fileName = basename(file.path);
-    final destination = 'files/$fileName';
-
-    task = FirebaseApi.uploadFile(destination, file);
-    setState(() {});
-
-    if (task == null) return;
-
-    final snapshot = await task.whenComplete(() {});
-    final urlDownload = await snapshot.ref.getDownloadURL();
-    //
-    url = urlDownload;
-
-    print('Download-Link: $urlDownload');
-
-    setState(() {
-      //uploadFile();
-      Uri uri = Uri.parse(url);
-      typeString = uri.path.substring(uri.path.length - 3).toLowerCase();
-      controller = VideoPlayerController.network(url)
-        ..addListener(() => setState(() {}))
-        ..setLooping(false)
-        ..initialize().then((_) => controller.play());
-      //  isMuted = controller.value.volume == 0;
-    });
   }
 
   Widget buildUploadStatus(UploadTask task) => StreamBuilder<TaskSnapshot>(

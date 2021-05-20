@@ -49,7 +49,7 @@ class _SignUpState extends State<SignUp> {
         databaseMethods.uploadUserInfo(userInfo);
         HelperFunctions.saveUserLoggedInSharedPreference(true);
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => PublishRecipe(
+            context, MaterialPageRoute(builder: (context) => BottomNav(
                 userName:usernameEditingController.text, userEmail: emailEditingController.text
               )));
       });

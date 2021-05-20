@@ -24,11 +24,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 
+import 'feed.dart';
+import 'feedDetails.dart';
 import 'homeIcon.dart';
 
 void main() => runApp(new BottomNav());
 
 class BottomNav extends StatefulWidget {
+  final String userName;
+  final String userEmail;
+
+  BottomNav({this.userName, this.userEmail});
   BottomNavState createState() => BottomNavState();
 }
 
@@ -37,12 +43,14 @@ class BottomNavState extends State<BottomNav> {
   callPage(int currentIndex) {
     switch (currentIndex) {
       case 0:
-        return Home();
+      return Feed();
       case 1:
-        return PublishRecipe();
+        return Home();
       case 2:
-        return Search();
+        return PublishRecipe(userName:widget.userName, userEmail: widget.userEmail,);
       case 3:
+        return Search();
+      case 4:
         return Profile();
         break;
       default:
@@ -60,9 +68,17 @@ class BottomNavState extends State<BottomNav> {
           currentIndex: _currentIndex,
           onTap: (value) {
             _currentIndex = value;
+            
+            
             setState(() {});
           },
           items: [
+             BottomNavigationBarItem(
+                icon: Icon(Icons.feed, color: Colors.blue),
+                title: Text(
+                  'Feed',
+                  style: TextStyle(color: Colors.black),
+                )),
             BottomNavigationBarItem(
                 icon: Icon(Icons.home, color: Colors.blue),
                 title: Text(

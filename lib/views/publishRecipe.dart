@@ -75,7 +75,7 @@ class _PublishRecipeState extends State<PublishRecipe> {
     final snapshot = await task.whenComplete(() {});
     final urlDownload = await snapshot.ref.getDownloadURL();
     //
-    url = urlDownload;
+    url = urlDownload; //mao ni ang link
 
     print('Download-Link: $urlDownload');
 
@@ -101,51 +101,32 @@ class _PublishRecipeState extends State<PublishRecipe> {
   publish() {
     String recipe_name = recipeName.text;
     Map<String, dynamic> userMap = {
+      "recipe_name": recipe_name,
       "email": widget.userEmail,
-      "user_name": widget.userName
+      "user_name": widget.userName,
+      "upload":url
     };
     Map<String, dynamic> healthInfoMap = {
       "calories": tfcalories.text,
       "proteins": tfproteins.text,
       "fats": tffats.text,
       "carbs": tfcarbs.text,
-      "upload": url
+      //"upload": url 
     };
     Map<String, dynamic> ingredientsMap = {"ing": ingr};
     Map<String, dynamic> recipeMap = {"rec": recipe};
-    // if (ingredients.length == 0) {
-    //   ingredients.insert(
-    //       0,
-    //       Ingredients(
-    //           nameIngredients: start_name_ingredients.text,
-    //           qtyIngredients: double.parse(start_qty_ingredients.text),
-    //           units: start_units_ingredients.text));
-    //           databaseMethods.uploadRecipeInfo(chosenCategory, recipe_name, userMap);
-    // databaseMethods.uploadDetailsofRecipe(ingredientsMap, healthInfoMap,
-    //     recipe_name, chosenCategory, widget.userEmail);
-    // }
-//mao ni
-    log('check');
-    databaseMethods.uploadRecipeInfo(chosenCategory, recipe_name, userMap);
+    //Map<String, dynamic> imageMap = {"upload": url};
+    Map<String, dynamic> categoryMap = {"cat": chosenCategory};
+      log('check');
+    databaseMethods.uploadRecipeInfo(categoryMap, recipe_name, userMap);
     databaseMethods.uploadDetailsofRecipe(ingredientsMap, recipeMap,
-        healthInfoMap, recipe_name, chosenCategory, widget.userEmail);
+        healthInfoMap, recipe_name, categoryMap, widget.userEmail);
     log('amen');
-   // clearimage();
-    // typeString = null;
-    // url = null;
-    // controller = null;
-    // textController = null;
-    //ingredients = null;
-    //String emp ="";
+
 chosenCategory=null;
     setState(() {
-      //chosenCategory=null;
-      //ingr = [null];
       ingr.length = 0;
-      // recipe = [null];
       recipe.length = 0;
-      // chosenCategory = "Choose Category";
-      // _category = [""];
     });
 
     recipeName.text = "";
@@ -485,43 +466,6 @@ chosenCategory=null;
                     'NO INGREDIENTS ADDED',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   )
-                // ? Row(
-                //     mainAxisAlignment: MainAxisAlignment.center,
-                //     children: [
-                //       Container(
-                //         width: 150,
-                //         height: 70,
-                //         child: Padding(
-                //           padding: const EdgeInsets.all(10),
-                //           child: TextField(
-                //               controller: start_name_ingredients,
-                //               decoration: textFieldInputDecoration("Name")),
-                //         ),
-                //       ),
-                //       Container(
-                //         width: 100,
-                //         height: 70,
-                //         child: Padding(
-                //           padding: const EdgeInsets.all(10),
-                //           child: TextField(
-                //               keyboardType: TextInputType.number,
-                //               controller: start_qty_ingredients,
-                //               decoration: textFieldInputDecoration("Qty")),
-                //         ),
-                //       ),
-                //       Container(
-                //         width: 100,
-                //         height: 70,
-                //         child: Padding(
-                //           padding: const EdgeInsets.all(10),
-                //           child: TextField(
-                //               // keyboardType: TextInputType.number,
-                //               controller: start_units_ingredients,
-                //               decoration: textFieldInputDecoration("Units")),
-                //         ),
-                //       ),
-                //     ],
-                //   )
                 : ListView.builder(
                     shrinkWrap: true,
                     itemCount: ingr.length,
@@ -534,8 +478,7 @@ chosenCategory=null;
                                 style: TextStyle(
                                     fontSize: 18, fontStyle: FontStyle.italic)),
                           ),
-                          // Text('${ingredients[index].qtyIngredients}'),
-                          // Text('${ingredients[index].units}')
+                        
                         ),
                       );
                     }),
@@ -572,8 +515,6 @@ chosenCategory=null;
                                 style: TextStyle(
                                     fontSize: 18, fontStyle: FontStyle.italic)),
                           ),
-                          // Text('${ingredients[index].qtyIngredients}'),
-                          // Text('${ingredients[index].units}')
                         ),
                       );
                     }),

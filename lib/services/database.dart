@@ -22,67 +22,78 @@ class DatabaseMethods {
       print(e.toString());
     });
   }
+
 //mao ni
-  uploadRecipeInfo(String chosenCategory, String recipeName, userMap) {
+  uploadRecipeInfo(categoryMap, String recipeName, userMap) {
     // log('tabang');
-     FirebaseFirestore.instance.collection('recipes')
-     .doc('recipes')
-     .collection(chosenCategory)
-     .doc(recipeName)
-     .set(userMap)
-     .catchError((e) {
+    FirebaseFirestore.instance
+        .collection('recipes')
+        .doc(recipeName)
+        .set(userMap)
+        .catchError((e) {
+      print(e.toString());
+    });
+  }
+
+  uploadDetailsofRecipe(ingredientsMap, recipeMap, healthInfoMap,
+      String recipeName, categoryMap, String useremail) {
+    FirebaseFirestore.instance
+        .collection('recipes')
+        .doc(recipeName)
+        .collection('Health Informations')
+        .add(healthInfoMap)
+        .catchError((e) {
+      print(e.toString());
+    });
+    FirebaseFirestore.instance
+        .collection('recipes')
+        .doc(recipeName)
+        .collection('Ingredients')
+        .add(ingredientsMap)
+        .catchError((e) {
+      print(e.toString());
+    });
+
+    FirebaseFirestore.instance
+        .collection('recipes')
+        .doc(recipeName)
+        .collection('Recipe')
+        .add(recipeMap)
+        .catchError((e) {
+      print(e.toString());
+    });
+    // FirebaseFirestore.instance
+    //    .collection('recipes')
+    //     .doc(recipeName)
+    //     .collection('Image Video')
+    //     .add(imageMap)
+    //     .catchError((e) {
+    //   print(e.toString());
+    // });
+
+    FirebaseFirestore.instance
+        .collection('recipes')
+        .doc(recipeName)
+        .collection('Category')
+        .add(categoryMap)
+        .catchError((e) {
       print(e.toString());
     });
 
   }
-   uploadDetailsofRecipe(ingredientsMap,recipeMap,healthInfoMap,String recipeName,String chosenCategory,String useremail)
-  {
-    FirebaseFirestore.instance.collection('recipes')
-    .doc('recipes')
-    .collection(chosenCategory)
-    .doc(recipeName)
-    .collection('Health Informations')
-    .add(healthInfoMap)
-    .catchError((e) {
-      print(e.toString());
-    });
-    FirebaseFirestore.instance.collection('recipes')
-    .doc('recipes')
-    .collection(chosenCategory)
-    .doc(recipeName)
-    .collection('Ingredients')
-    .add(ingredientsMap)
-    .catchError((e) {
-      print(e.toString());
-    });
 
-     FirebaseFirestore.instance.collection('recipes')
-    .doc('recipes')
-    .collection(chosenCategory)
-    .doc(recipeName)
-    .collection('Recipe')
-    .add(recipeMap)
-    .catchError((e) {
-      print(e.toString());
-    });
-
-
-
-
-    // FirebaseFirestore.instance.collection('recipeDetails').doc(recipeName)
-    // .collection('healthInfo').add(ingredientsInfo);
-    //  FirebaseFirestore.instance.collection('recipeDetails').doc(recipeName)
-    // .collection('healthInfo').add(recipeInfo);
-
-    
-  }
-  uploadRecipeandAuthor(recipeName,userMap)
-  {
-    FirebaseFirestore.instance.collection('recipeDetails').doc(recipeName)
-    .set(userMap);
+  getRecipe() async {
+    return await FirebaseFirestore.instance
+        .collection('recipes')
+        .snapshots();
   }
 
- 
+  uploadRecipeandAuthor(recipeName, userMap) {
+    FirebaseFirestore.instance
+        .collection('recipeDetails')
+        .doc(recipeName)
+        .set(userMap);
+  }
 
   // createChatRoom(String chatRoomId, chatRoomMap) {
   //   FirebaseFirestore.instance

@@ -2,8 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:recipe_application/services/database.dart';
-import 'package:recipe_application/views/feedDetails.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:recipe_application/views/feed_details.dart';
 
 class Feed extends StatefulWidget {
   @override
@@ -13,6 +13,9 @@ class Feed extends StatefulWidget {
 class _FeedState extends State<Feed> {
   DatabaseMethods databaseMethods = new DatabaseMethods();
   Stream publishedRecipe;
+  String emailforDetail;
+  String recipeforDetail;
+  String imageforDetail;
   //String name = "Pif panget";
 
 //  Widget _buildBody(BuildContext context, bool name) {
@@ -37,15 +40,35 @@ class _FeedState extends State<Feed> {
               ? ListView.builder(
                   itemCount: snapshot.data.docs.length,
                   itemBuilder: (context, index) {
-                    return CardForRecipe(
-                      name: snapshot.data.docs[index]
-                          .data()['user_name']
-                          .toString(),
-                      image:
-                          snapshot.data.docs[index].data()['upload'].toString(),
-                      foodName: snapshot.data.docs[index]
-                          .data()['recipe_name']
-                          .toString(),
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => FeedDetails(
+
+                                      image: snapshot.data.docs[index]
+                                          .data()['upload']
+                                          .toString(),
+                                          email:snapshot.data.docs[index]
+                                          .data()['email']
+                                          .toString(),
+                                          recipe:snapshot.data.docs[index]
+                                          .data()['recipe_name']
+                                          .toString(),
+                                    )));
+                      },
+                      child: CardForRecipe(
+                        name: snapshot.data.docs[index]
+                            .data()['user_name']
+                            .toString(),
+                        image: snapshot.data.docs[index]
+                            .data()['upload']
+                            .toString(),
+                        foodName: snapshot.data.docs[index]
+                            .data()['recipe_name']
+                            .toString(),
+                      ),
                     );
                   },
                 )
@@ -68,11 +91,11 @@ class _FeedState extends State<Feed> {
     return Scaffold(
         backgroundColor: Colors.grey[300],
         appBar: AppBar(
-          backgroundColor: Colors.indigo[400],
-          title: Text(
-            'Feed',
-            style: TextStyle(color: Colors.white),
-          )),
+            backgroundColor: Colors.indigo[400],
+            title: Text(
+              'Feed',
+              style: TextStyle(color: Colors.white),
+            )),
         body: Container(child: RecipeList()));
   }
 }
@@ -85,15 +108,7 @@ class CardForRecipe extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){
-         Navigator.push(
-              context, MaterialPageRoute(builder: (context) =>
-               FeedDetail(name:name,image:image,foodName:foodName)));
-              log(name.toString()) ;
-               log(image.toString()) ;
-                log(foodName.toString()) ;
-      },
-          child: Card(
+      child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15.0),
         ),
@@ -107,8 +122,8 @@ class CardForRecipe extends StatelessWidget {
                     alignment: Alignment.topLeft,
                     child: Text(
                       name,
-                      style:
-                          TextStyle(fontStyle: FontStyle.italic, fontSize: 25.0),
+                      style: TextStyle(
+                          fontStyle: FontStyle.italic, fontSize: 25.0),
                     ),
                   ),
                 ),
@@ -127,8 +142,8 @@ class CardForRecipe extends StatelessWidget {
                     alignment: Alignment.bottomLeft,
                     child: Text(
                       foodName,
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 20.0),
                     ),
                   ),
                 ),

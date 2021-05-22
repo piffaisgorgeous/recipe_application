@@ -16,22 +16,7 @@ class _FeedState extends State<Feed> {
   String emailforDetail;
   String recipeforDetail;
   String imageforDetail;
-  //String name = "Pif panget";
 
-//  Widget _buildBody(BuildContext context, bool name) {
-//     return StreamBuilder<QuerySnapshot>(
-//       stream: FirebaseFirestore.instance
-//           .collection('recipes')
-//           .doc('recipes')
-//           .collection('chats')
-//           .snapshots(),
-//       builder: (context, snapshot) {
-//         if (!snapshot.hasData) return LinearProgressIndicator();
-
-//         return _buildList(context, snapshot.data.docs, name);
-//       },
-//     );
-//   }
   Widget RecipeList() {
     return StreamBuilder(
         stream: publishedRecipe,
@@ -56,6 +41,10 @@ class _FeedState extends State<Feed> {
                                           recipe:snapshot.data.docs[index]
                                           .data()['recipe_name']
                                           .toString(),
+                                            foodName: snapshot.data.docs[index]
+                            .data()['recipe_name']
+                            .toString()
+
                                     )));
                       },
                       child: CardForRecipe(
@@ -108,46 +97,50 @@ class CardForRecipe extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15.0),
-        ),
-        child: Center(
-          child: Container(
-            child: Center(
-              child: Column(children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      name,
-                      style: TextStyle(
-                          fontStyle: FontStyle.italic, fontSize: 25.0),
+      child: Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: Card(
+          color: Colors.indigo[100],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          child: Center(
+            child: Container(
+              child: Center(
+                child: Column(children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        name,
+                        style: TextStyle(
+                            fontStyle: FontStyle.italic, fontSize: 25.0),
+                      ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Container(
-                    // color: Colors.blue,
-                    height: 200,
-                    width: MediaQuery.of(context).size.width,
-                    child: Image.network(image),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Align(
-                    alignment: Alignment.bottomLeft,
-                    child: Text(
-                      foodName,
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 20.0),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Container(
+                      // color: Colors.blue,
+                      height: 200,
+                      width: MediaQuery.of(context).size.width,
+                      child: Image.network(image),
                     ),
                   ),
-                ),
-              ]),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Align(
+                      alignment: Alignment.bottomLeft,
+                      child: Text(
+                        foodName,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 20.0),
+                      ),
+                    ),
+                  ),
+                ]),
+              ),
             ),
           ),
         ),

@@ -41,116 +41,57 @@ Container containerDecoration(String text) {
   );
 }
 
-Card cardFeedDetails(BuildContext context, food, String name, String image) {
-  return Card(
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(15.0),
-    ),
-    child: Center(
-      child: Container(
-        child: Center(
-          child: Column(children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Container(
-                // color: Colors.blue,
-                height: 200,
-                width: MediaQuery.of(context).size.width,
-                child: Image.network(image),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Align(
-                alignment: Alignment.bottomLeft,
-                child: Text(
-                  food,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25.0),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: Text(
-                  name,
-                  style: TextStyle(fontStyle: FontStyle.italic, fontSize: 20.0),
-                ),
-              ),
-            ),
-          ]),
-        ),
-      ),
-    ),
-  );
-}
 
-Padding rowFeed(String name, String numb) {
-  return Padding(
-    padding: const EdgeInsets.all(10.0),
-    child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-      Text(
-        name,
-        style: TextStyle(fontSize: 18),
-      ),
-      Text(
-        numb,
-        style: TextStyle(fontSize: 18),
-      ),
-    ]),
-  );
-}
 
-Padding rowFeedHealth(int cal_val, carb_val, fat_val, prot_val) {
+Padding rowFeedHealth(String cal_val, carb_val, fat_val, prot_val) {
   return Padding(
     padding: const EdgeInsets.all(10.0),
     child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       Column(
         children: [
           Text(
-            "cal",
-            style: TextStyle(fontSize: 18),
+            "Calories",
+            style: TextStyle(fontSize: 20),
           ),
           Text(
-            cal_val.toString(),
-            style: TextStyle(fontSize: 18),
-          ),
-        ],
-      ),
-      Column(
-        children: [
-          Text(
-            "carb",
-            style: TextStyle(fontSize: 18),
-          ),
-          Text(
-            carb_val.toString(),
-            style: TextStyle(fontSize: 18),
+            cal_val,
+            style: TextStyle(fontSize: 20),
           ),
         ],
       ),
       Column(
         children: [
           Text(
-            "fat",
-            style: TextStyle(fontSize: 18),
+            "Carbs",
+            style: TextStyle(fontSize: 20),
           ),
           Text(
-            fat_val.toString(),
-            style: TextStyle(fontSize: 18),
+            carb_val,
+            style: TextStyle(fontSize: 20),
           ),
         ],
       ),
       Column(
         children: [
           Text(
-            "prot",
-            style: TextStyle(fontSize: 18),
+            "Fats",
+            style: TextStyle(fontSize: 20),
           ),
           Text(
-            prot_val.toString(),
-            style: TextStyle(fontSize: 18),
+            fat_val,
+            style: TextStyle(fontSize: 20),
+          ),
+        ],
+      ),
+      Column(
+        children: [
+          Text(
+            "Proteins",
+            style: TextStyle(fontSize: 20),
+          ),
+          Text(
+            prot_val,
+            style: TextStyle(fontSize: 20),
           ),
         ],
       ),

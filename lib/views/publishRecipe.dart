@@ -14,7 +14,8 @@ import 'package:path/path.dart';
 import 'package:video_player/video_player.dart';
 
 class PublishRecipe extends StatefulWidget {
-  final String userName;
+  final String userName; //pif mao ni ako nakitan nga error kay inig balik diri kay 
+  //null ang username
   final String userEmail;
   PublishRecipe({this.userName, this.userEmail});
   @override

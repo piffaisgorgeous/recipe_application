@@ -88,6 +88,29 @@ class DatabaseMethods {
         .snapshots();
   }
 
+  getDetailsofRecipe(String recipeName,String userEmail) async{
+    return await FirebaseFirestore.instance
+    .collection('recipes')
+    .doc(recipeName)
+    .collection('Health Informations')
+    .snapshots();
+  }
+
+  getIngredients (String recipeName, String userEmail ) async{
+    return await FirebaseFirestore. instance
+    .collection('recipes')
+    .doc(recipeName)
+    .collection('Ingredients')
+    .snapshots();
+  }
+  getRecipeDetails (String recipeName, String userEmail ) async{
+    return await FirebaseFirestore. instance
+    .collection('recipes')
+    .doc(recipeName)
+    .collection('Recipe')
+    .snapshots();
+  }
+
   uploadRecipeandAuthor(recipeName, userMap) {
     FirebaseFirestore.instance
         .collection('recipeDetails')

@@ -25,7 +25,7 @@ import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 
 import 'feed.dart';
-import 'feedDetails.dart';
+
 import 'homeIcon.dart';
 
 void main() => runApp(new BottomNav());

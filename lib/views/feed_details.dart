@@ -33,15 +33,6 @@ class _FeedDetailsState extends State<FeedDetails> {
                       snapshot.data.docs[0].data()['carbs'].toString(),
                       snapshot.data.docs[0].data()['fats'].toString(),
                       snapshot.data.docs[0].data()['proteins'].toString()),
-
-                  // Text('Calories' +
-                  //     snapshot.data.docs[0].data()['calories'].toString()),
-                  // Text('Carbs' +
-                  //     snapshot.data.docs[0].data()['carbs'].toString()),
-                  // Text(
-                  //     'Fats' + snapshot.data.docs[0].data()['fats'].toString()),
-                  // Text('Proteins' +
-                  //     snapshot.data.docs[0].data()['proteins'].toString()),
                 ])
               : Container(child: Text("hakdog"));
         });

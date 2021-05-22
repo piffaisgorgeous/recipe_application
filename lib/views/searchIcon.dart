@@ -1,9 +1,12 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:recipe_application/views/displaySearch.dart';
 import 'package:recipe_application/widget/widget.dart';
 
 // SEARCH == account
+String sampleChoice;
+List<String> choice = [];
 class Search extends StatefulWidget {
   @override
   _SearchState createState() => _SearchState();
@@ -13,6 +16,7 @@ class _SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
     TextEditingController search_cat = new TextEditingController();
+    choice.clear();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.indigo[400],
@@ -36,7 +40,12 @@ class _SearchState extends State<Search> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    // initiateSearch();
+                     //initiateSearch();
+                      Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DisplaySearch(category:choice)
+                                ));
                   },
                   child: Container(
                       height: 40,
@@ -120,7 +129,8 @@ class MiCard extends StatefulWidget {
   _MiCardState createState() => _MiCardState();
 }
 
-List<String> choice = [];
+
+
   int i=0;
 class _MiCardState extends State<MiCard> {
   // Map<String, dynamic> iconMap = {"icon": widget.icon};
@@ -149,8 +159,9 @@ class _MiCardState extends State<MiCard> {
             value: this.valuefirst,
             onChanged: (bool value) {
               setState(() {
+                sampleChoice=widget.title.toLowerCase();
                 this.valuefirst = value;
-                choice.add(widget.title);
+                choice.add(widget.title.toLowerCase());
               });
             
                 log(choice[i]);

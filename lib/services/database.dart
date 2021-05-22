@@ -24,7 +24,7 @@ class DatabaseMethods {
   }
 
 //mao ni
-  uploadRecipeInfo(categoryMap, String recipeName, userMap) {
+  uploadRecipeInfo( String recipeName, userMap) {
     // log('tabang');
     FirebaseFirestore.instance
         .collection('recipes')
@@ -36,7 +36,7 @@ class DatabaseMethods {
   }
 
   uploadDetailsofRecipe(ingredientsMap, recipeMap, healthInfoMap,
-      String recipeName, categoryMap, String useremail) {
+      String recipeName, String useremail) {
     FirebaseFirestore.instance
         .collection('recipes')
         .doc(recipeName)
@@ -71,14 +71,14 @@ class DatabaseMethods {
     //   print(e.toString());
     // });
 
-    FirebaseFirestore.instance
-        .collection('recipes')
-        .doc(recipeName)
-        .collection('Category')
-        .add(categoryMap)
-        .catchError((e) {
-      print(e.toString());
-    });
+    // FirebaseFirestore.instance
+    //     .collection('recipes')
+    //     .doc(recipeName)
+    //     .collection('Category')
+    //     .add(categoryMap)
+    //     .catchError((e) {
+    //   print(e.toString());
+    // });
 
   }
 
@@ -108,6 +108,14 @@ class DatabaseMethods {
     .collection('recipes')
     .doc(recipeName)
     .collection('Recipe')
+    .snapshots();
+  }
+
+  getSearchedRecipe(List category) async
+  {
+    return await FirebaseFirestore.instance 
+    .collection('recipes')
+    .where('cat', arrayContainsAny: category)
     .snapshots();
   }
 

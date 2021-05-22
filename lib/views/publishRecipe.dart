@@ -44,6 +44,7 @@ class _PublishRecipeState extends State<PublishRecipe> {
   TextEditingController start_name_recipe = new TextEditingController();
 
   String chosenCategory, calories, fats, proteins, carbs;
+  List chosen;
   List _category = [
     'soup',
     'salad',
@@ -105,7 +106,8 @@ class _PublishRecipeState extends State<PublishRecipe> {
       "recipe_name": recipe_name,
       "email": widget.userEmail,
       "user_name": widget.userName,
-      "upload":url
+      "upload":url,
+      "cat":chosenCategory
     };
     Map<String, dynamic> healthInfoMap = {
       "calories": tfcalories.text,
@@ -119,9 +121,9 @@ class _PublishRecipeState extends State<PublishRecipe> {
     //Map<String, dynamic> imageMap = {"upload": url};
     Map<String, dynamic> categoryMap = {"cat": chosenCategory};
       log('check');
-    databaseMethods.uploadRecipeInfo(categoryMap, recipe_name, userMap);
+    databaseMethods.uploadRecipeInfo(recipe_name, userMap);
     databaseMethods.uploadDetailsofRecipe(ingredientsMap, recipeMap,
-        healthInfoMap, recipe_name, categoryMap, widget.userEmail);
+        healthInfoMap, recipe_name, widget.userEmail);
     log('amen');
 
 chosenCategory=null;

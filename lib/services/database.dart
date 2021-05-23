@@ -23,9 +23,7 @@ class DatabaseMethods {
     });
   }
 
-//mao ni
-  uploadRecipeInfo(categoryMap, String recipeName, userMap) {
-    // log('tabang');
+  uploadRecipeInfo( String recipeName, userMap) {
     FirebaseFirestore.instance
         .collection('recipes')
         .doc(recipeName)
@@ -36,7 +34,7 @@ class DatabaseMethods {
   }
 
   uploadDetailsofRecipe(ingredientsMap, recipeMap, healthInfoMap,
-      String recipeName, categoryMap, String useremail) {
+      String recipeName, String useremail) {
     FirebaseFirestore.instance
         .collection('recipes')
         .doc(recipeName)
@@ -62,23 +60,7 @@ class DatabaseMethods {
         .catchError((e) {
       print(e.toString());
     });
-    // FirebaseFirestore.instance
-    //    .collection('recipes')
-    //     .doc(recipeName)
-    //     .collection('Image Video')
-    //     .add(imageMap)
-    //     .catchError((e) {
-    //   print(e.toString());
-    // });
-
-    FirebaseFirestore.instance
-        .collection('recipes')
-        .doc(recipeName)
-        .collection('Category')
-        .add(categoryMap)
-        .catchError((e) {
-      print(e.toString());
-    });
+   
 
   }
 
@@ -111,6 +93,14 @@ class DatabaseMethods {
     .snapshots();
   }
 
+  getSearchedRecipe(List category) async
+  {
+    return await FirebaseFirestore.instance 
+    .collection('recipes')
+    .where('cat', arrayContainsAny: category)
+    .snapshots();
+  }
+
   uploadRecipeandAuthor(recipeName, userMap) {
     FirebaseFirestore.instance
         .collection('recipeDetails')
@@ -118,40 +108,35 @@ class DatabaseMethods {
         .set(userMap);
   }
 
-  // createChatRoom(String chatRoomId, chatRoomMap) {
-  //   FirebaseFirestore.instance
-  //       .collection("ChatRoom")
-  //       .doc(chatRoomId)
-  //       .set(chatRoomMap)
-  //       .catchError((e) {
-  //     print(e.toString());
-  //   });
-  // }
+ getUserPublish(String email,String username) async
+  {
+    return await FirebaseFirestore.instance 
+    .collection('recipes')
+    .where('email', isEqualTo:email)
+    .where('user_name', isEqualTo:username)
+    .snapshots();
+  }
 
-  // getConversationMessages(String chatRoomId) async {
-  //   return await FirebaseFirestore.instance
-  //       .collection("ChatRoom")
-  //       .doc(chatRoomId)
-  //       .collection("chats")
-  //       .orderBy("time", descending: false)
-  //       .snapshots();
-  // }
-
-  addConversationMessages(String chatRoomId, messageMap) {
-    FirebaseFirestore.instance
-        .collection("ChatRoom")
-        .doc(chatRoomId)
-        .collection("chats")
-        .add(messageMap)
+  recipeOfTheDay(DateTime date, recipeMap)
+  {
+       FirebaseFirestore.instance
+        .collection('randomRecipe')
+        .doc(date.toString())
+        .set(recipeMap)
         .catchError((e) {
       print(e.toString());
     });
+
   }
 
-  getChatRooms(String userName) async {
-    return await FirebaseFirestore.instance
-        .collection("ChatRoom")
-        .where("users", arrayContains: userName)
+  getrecipeOfTheDay(DateTime date) async
+  {
+      return await FirebaseFirestore.instance
+        .collection('randomRecipe')
+        .where('date', isEqualTo: date)
         .snapshots();
   }
+
+
+
 }

@@ -5,23 +5,25 @@ import 'package:recipe_application/services/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:recipe_application/views/feed_details.dart';
 
-class Feed extends StatefulWidget {
-  // String barName;
-  // Feed({this.barName});
+class DisplaySearch extends StatefulWidget {
+  // final String category;
+  // DisplaySearch({this.category});
+    final List<String> category;
+  DisplaySearch({this.category});
   @override
-  _FeedState createState() => _FeedState();
+  _DisplaySearchState createState() => _DisplaySearchState();
 }
 
-class _FeedState extends State<Feed> {
+class _DisplaySearchState extends State<DisplaySearch> {
   DatabaseMethods databaseMethods = new DatabaseMethods();
-  Stream publishedRecipe;
-  String emailforDetail;
-  String recipeforDetail;
-  String imageforDetail;
+  //List <Stream> searchedRecipe;
+  Stream searchedRecipe;
+  List <String> categoryFromFirebase;
 
+//display(){
   Widget RecipeList() {
     return StreamBuilder(
-        stream: publishedRecipe,
+        stream: searchedRecipe,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           return snapshot.hasData
               ? ListView.builder(
@@ -66,14 +68,16 @@ class _FeedState extends State<Feed> {
               : Container();
         });
   }
+//}
 
   @override
   void initState() {
-    databaseMethods.getRecipe().then((result) {
+    databaseMethods.getSearchedRecipe(widget.category).then((result) {
       setState(() {
-        publishedRecipe = result;
+        searchedRecipe=result;
       });
     });
+  
     super.initState();
   }
 
@@ -84,7 +88,7 @@ class _FeedState extends State<Feed> {
         appBar: AppBar(
             backgroundColor: Colors.indigo[400],
             title: Text(
-              "Feed",
+              'Feed',
               style: TextStyle(color: Colors.white),
             )),
         body: Container(child: RecipeList()));

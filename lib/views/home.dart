@@ -15,6 +15,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:recipe_application/api/firebase_api.dart';
+import 'package:recipe_application/views/profile.dart';
 import 'package:recipe_application/views/profileIcon.dart';
 import 'package:recipe_application/views/publishRecipe.dart';
 import 'package:recipe_application/views/searchIcon.dart';
@@ -51,7 +52,7 @@ class BottomNavState extends State<BottomNav> {
       case 3:
         return Search();
       case 4:
-        return Profile();
+        return  Profilet(username:widget.userName, email: widget.userEmail);
         break;
       default:
         return Home();
@@ -65,6 +66,7 @@ class BottomNavState extends State<BottomNav> {
       home: Scaffold(
         body: callPage(_currentIndex),
         bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: Colors.yellow,
           currentIndex: _currentIndex,
           onTap: (value) {
             _currentIndex = value;
@@ -74,37 +76,38 @@ class BottomNavState extends State<BottomNav> {
           },
           items: [
              BottomNavigationBarItem(
-                icon: Icon(Icons.feed, color: Colors.blue),
+               
+                icon: Icon(Icons.feed, color: Colors.indigo[400]),
                 title: Text(
                   'Feed',
-                  style: TextStyle(color: Colors.black),
+                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
                 )),
             BottomNavigationBarItem(
-                icon: Icon(Icons.home, color: Colors.blue),
+                icon: Icon(Icons.home, color: Colors.indigo[400]),
                 title: Text(
                   'Home',
-                  style: TextStyle(color: Colors.black),
+                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
                 )),
             BottomNavigationBarItem(
-                icon: Icon(Icons.add_box_outlined, color: Colors.blue),
+                icon: Icon(Icons.add_box_outlined, color: Colors.indigo[400]),
                 title: Text(
                   'Upload',
-                  style: TextStyle(color: Colors.black),
+                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
                 )),
             BottomNavigationBarItem(
                 icon: Icon(
                   Icons.search,
-                  color: Colors.blue,
+                  color: Colors.indigo[400]
                 ),
                 title: Text(
                   'Search',
-                  style: TextStyle(color: Colors.black),
+                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
                 )),
             BottomNavigationBarItem(
-                icon: Icon(Icons.account_box, color: Colors.blue),
+                icon: Icon(Icons.account_box, color: Colors.indigo[400]),
                 title: Text(
                   'Account',
-                  style: TextStyle(color: Colors.black),
+                  style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
                 ))
           ],
         ),

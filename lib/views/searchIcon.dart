@@ -1,9 +1,12 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:recipe_application/views/displaySearch.dart';
 import 'package:recipe_application/widget/widget.dart';
 
 // SEARCH == account
+String sampleChoice;
+List<String> choice = [];
 class Search extends StatefulWidget {
   @override
   _SearchState createState() => _SearchState();
@@ -13,12 +16,13 @@ class _SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
     TextEditingController search_cat = new TextEditingController();
+    choice.clear();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.indigo[400],
         title: Text("Search Category"),
       ),
-      backgroundColor: Colors.grey[50],
+      backgroundColor: Colors.indigo[100],
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -36,7 +40,12 @@ class _SearchState extends State<Search> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    // initiateSearch();
+                     //initiateSearch();
+                      Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DisplaySearch(category:choice)
+                                ));
                   },
                   child: Container(
                       height: 40,
@@ -58,7 +67,7 @@ class _SearchState extends State<Search> {
             ),
             Text(
               'Categories',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic),
             ),
             SizedBox(
               height: 15,
@@ -85,7 +94,7 @@ class _SearchState extends State<Search> {
             ),
             MiCard(
               icon: Icons.emoji_food_beverage_sharp,
-              title: 'Ginamos',
+              title: 'Sauces',
             ),
             MiCard(
               icon: Icons.local_drink_sharp,
@@ -93,15 +102,27 @@ class _SearchState extends State<Search> {
             ),
             MiCard(
               icon: Icons.dinner_dining,
-              title: 'Dine In',
+              title: 'Breakfast Food',
             ),
             MiCard(
               icon: Icons.set_meal,
-              title: 'Fish',
+              title: 'Lunch Cuisine',
             ),
             MiCard(
-              icon: Icons.favorite_outline_sharp,
-              title: 'Fruits',
+              icon: Icons.dining,
+              title: 'Dinner Style',
+            ),
+             MiCard(
+              icon: Icons.fastfood,
+              title: 'Sandwiches',
+            ),
+             MiCard(
+              icon: Icons.food_bank,
+              title: 'Finger Food',
+            ),
+             MiCard(
+              icon: Icons.dinner_dining,
+              title: 'Vegetarian Cuisine',
             ),
           ],
         ),
@@ -120,7 +141,8 @@ class MiCard extends StatefulWidget {
   _MiCardState createState() => _MiCardState();
 }
 
-List<String> choice = [];
+
+
   int i=0;
 class _MiCardState extends State<MiCard> {
   // Map<String, dynamic> iconMap = {"icon": widget.icon};
@@ -137,9 +159,12 @@ class _MiCardState extends State<MiCard> {
             children: [
               Icon(widget.icon),
               SizedBox(
-                width: 10,
+                width: 17,
               ),
-              Text(widget.title)
+              Text(widget.title,
+              style: TextStyle(
+                fontSize: 16, fontWeight: FontWeight.bold
+              ),)
             ],
           ),
         ),
@@ -149,8 +174,9 @@ class _MiCardState extends State<MiCard> {
             value: this.valuefirst,
             onChanged: (bool value) {
               setState(() {
+                sampleChoice=widget.title.toLowerCase();
                 this.valuefirst = value;
-                choice.add(widget.title);
+                choice.add(widget.title.toLowerCase());
               });
             
                 log(choice[i]);

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:recipe_application/services/database.dart';
 import 'package:recipe_application/widget/widget.dart';
 import 'package:slide_popup_dialog/slide_popup_dialog.dart';
+import 'package:slide_popup_dialog/slide_popup_dialog.dart';
 
 class FeedDetails extends StatefulWidget {
   final String image;
@@ -33,15 +34,6 @@ class _FeedDetailsState extends State<FeedDetails> {
                       snapshot.data.docs[0].data()['carbs'].toString(),
                       snapshot.data.docs[0].data()['fats'].toString(),
                       snapshot.data.docs[0].data()['proteins'].toString()),
-
-                  // Text('Calories' +
-                  //     snapshot.data.docs[0].data()['calories'].toString()),
-                  // Text('Carbs' +
-                  //     snapshot.data.docs[0].data()['carbs'].toString()),
-                  // Text(
-                  //     'Fats' + snapshot.data.docs[0].data()['fats'].toString()),
-                  // Text('Proteins' +
-                  //     snapshot.data.docs[0].data()['proteins'].toString()),
                 ])
               : Container(child: Text("hakdog"));
         });
@@ -99,6 +91,8 @@ class _FeedDetailsState extends State<FeedDetails> {
         });
   }
 
+  
+
   @override
   void initState() {
     databaseMethods
@@ -136,10 +130,15 @@ class _FeedDetailsState extends State<FeedDetails> {
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-              child: Container(
-                  height: MediaQuery.of(context).size.height / 2,
-                  width: MediaQuery.of(context).size.width,
-                  child: Image.network(widget.image)),
+              child: GestureDetector(
+                onTap:(){_showDialog(context);
+                
+                } ,
+                              child: Container(
+                    height: MediaQuery.of(context).size.height / 2,
+                    width: MediaQuery.of(context).size.width,
+                    child: Image.network(widget.image)),
+              ),
             ),
 
             // sa pic
@@ -274,5 +273,15 @@ class _FeedDetailsState extends State<FeedDetails> {
             ),
           ],
         )));
+  }
+
+   void _showDialog(BuildContext context) {
+   showSlideDialog(
+      context: context,
+      child: Text("Hello World"),
+      barrierColor: Colors.white.withOpacity(0.7),
+      pillColor: Colors.red,
+      backgroundColor: Colors.yellow,
+    );
   }
 }

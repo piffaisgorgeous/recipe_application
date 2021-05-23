@@ -72,10 +72,6 @@ class _DisplaySearchState extends State<DisplaySearch> {
 
   @override
   void initState() {
-
-    //for(int i=0; i<widget.category.length;i++)
-    
-
     databaseMethods.getSearchedRecipe(widget.category).then((result) {
       setState(() {
         searchedRecipe=result;
@@ -135,7 +131,7 @@ class CardForRecipe extends StatelessWidget {
                       // color: Colors.blue,
                       height: 200,
                       width: MediaQuery.of(context).size.width,
-                     // child: Image.network(image),
+                      child: Image.network(image),
                     ),
                   ),
                   Padding(

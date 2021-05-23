@@ -5,19 +5,19 @@ import 'package:recipe_application/services/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:recipe_application/views/feed_details.dart';
 
-class Feed extends StatefulWidget {
-  // String barName;
-  // Feed({this.barName});
+class ProfilePub extends StatefulWidget {
+    String username;
+  String email;
+   ProfilePub({this.username,this.email});
+
   @override
-  _FeedState createState() => _FeedState();
+  _ProfilePubState createState() => _ProfilePubState();
 }
 
-class _FeedState extends State<Feed> {
+class _ProfilePubState extends State<ProfilePub> {
   DatabaseMethods databaseMethods = new DatabaseMethods();
   Stream publishedRecipe;
-  String emailforDetail;
-  String recipeforDetail;
-  String imageforDetail;
+
 
   Widget RecipeList() {
     return StreamBuilder(
@@ -69,7 +69,7 @@ class _FeedState extends State<Feed> {
 
   @override
   void initState() {
-    databaseMethods.getRecipe().then((result) {
+    databaseMethods.getUserPublish(widget.email,widget.username).then((result) {
       setState(() {
         publishedRecipe = result;
       });
@@ -84,7 +84,8 @@ class _FeedState extends State<Feed> {
         appBar: AppBar(
             backgroundColor: Colors.indigo[400],
             title: Text(
-              "Feed",
+             
+             'Published REcipe',
               style: TextStyle(color: Colors.white),
             )),
         body: Container(child: RecipeList()));

@@ -14,41 +14,37 @@ import 'package:path/path.dart';
 import 'package:video_player/video_player.dart';
 
 class PublishRecipe extends StatefulWidget {
-  final String userName; //pif mao ni ako nakitan nga error kay inig balik diri kay 
-  //null ang username
+  final String
+      userName; 
   final String userEmail;
   PublishRecipe({this.userName, this.userEmail});
   @override
   _PublishRecipeState createState() => _PublishRecipeState();
 }
 
-String url = null;
-String typeString = null;
+List<String> choice = [];
+String sampleChoice;
 
 class _PublishRecipeState extends State<PublishRecipe> {
   UploadTask task;
   File file;
 
-  TextEditingController textController;
+  TextEditingController textController = null;
   VideoPlayerController controller;
+  String url = null;
+  String typeString = null;
 
   DatabaseMethods databaseMethods = new DatabaseMethods();
   TextEditingController recipeName = TextEditingController();
-  TextEditingController start_name_ingredients = new TextEditingController();
-  TextEditingController start_qty_ingredients = new TextEditingController();
-  TextEditingController start_units_ingredients = new TextEditingController();
   TextEditingController tfcalories = new TextEditingController();
   TextEditingController tfproteins = new TextEditingController();
   TextEditingController tffats = new TextEditingController();
   TextEditingController tfcarbs = new TextEditingController();
-  TextEditingController start_name_recipe = new TextEditingController();
+  TextEditingController name_ingredients = new TextEditingController();
+  TextEditingController qty_ingredients = new TextEditingController();
+  TextEditingController units_ingredients = new TextEditingController();
 
-  String chosenCategory, calories, fats, proteins, carbs;
-  List chosen;
-  List _category = [
-    'soup',
-    'salad',
-  ];
+  String chosenCategory;
   List<Ingredients> ingredients = [];
   List<String> ingr = [];
   List<String> recipe = [];
@@ -92,6 +88,7 @@ class _PublishRecipeState extends State<PublishRecipe> {
       //  isMuted = controller.value.volume == 0;
     });
   }
+
 // clearimage() {
 //     setState(() {
 //     typeString = null;
@@ -106,36 +103,40 @@ class _PublishRecipeState extends State<PublishRecipe> {
       "recipe_name": recipe_name,
       "email": widget.userEmail,
       "user_name": widget.userName,
-      "upload":url,
-      "cat":chosenCategory
+      "upload": url,
+      "cat": choice
     };
     Map<String, dynamic> healthInfoMap = {
       "calories": tfcalories.text,
       "proteins": tfproteins.text,
       "fats": tffats.text,
       "carbs": tfcarbs.text,
-      //"upload": url 
     };
     Map<String, dynamic> ingredientsMap = {"ing": ingr};
     Map<String, dynamic> recipeMap = {"rec": recipe};
-    //Map<String, dynamic> imageMap = {"upload": url};
-    Map<String, dynamic> categoryMap = {"cat": chosenCategory};
-      log('check');
+    log('check');
     databaseMethods.uploadRecipeInfo(recipe_name, userMap);
     databaseMethods.uploadDetailsofRecipe(ingredientsMap, recipeMap,
         healthInfoMap, recipe_name, widget.userEmail);
-    log('amen');
+    // log('amen');
 
-chosenCategory=null;
+    // chosenCategory = null;
     setState(() {
+      log("pak");
       ingr.length = 0;
       recipe.length = 0;
+//imageCache.clear();
+      // textController.text="";
+      // controller="";
+      // typeString = "";
+
+      // textController.text = "";
     });
 
     recipeName.text = "";
-    start_name_ingredients.text = "";
-    start_qty_ingredients.text = "";
-    start_units_ingredients.text = "";
+    name_ingredients.text = "";
+    qty_ingredients.text = "";
+    units_ingredients.text = "";
     tfcalories.text = "";
     tfproteins.text = "";
     tffats.text = "";
@@ -147,12 +148,30 @@ chosenCategory=null;
     log('done');
   }
 
+  trappingDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            backgroundColor: Colors.indigo[200],
+              title: Text('Kindly input please'),
+              actions: <Widget>[
+                MaterialButton(
+                    // elevation: 5.0,
+                    child: Text('Done',
+                    style: TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.bold
+                    ),),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    })
+              ]);
+        });
+  }
+
   createDialog(BuildContext context) {
     log(ingredients.length.toString());
 
-    TextEditingController name_ingredients = new TextEditingController();
-    TextEditingController qty_ingredients = new TextEditingController();
-    TextEditingController units_ingredients = new TextEditingController();
     int length;
     return showDialog(
         context: context,
@@ -160,12 +179,17 @@ chosenCategory=null;
           log("third");
 
           return AlertDialog(
-            title: Text('Ingredients'),
+            backgroundColor: Colors.indigo[100],
+            title: Text('Ingredients',
+            style: TextStyle(
+              fontSize: 20
+            ),),
             content: SingleChildScrollView(
               child: Column(
                 children: [
                   TextField(
                     controller: name_ingredients,
+                    
                     decoration: textFieldInputDecoration("name"),
                   ),
                   SizedBox(height: 8),
@@ -183,7 +207,11 @@ chosenCategory=null;
             ),
             actions: <Widget>[
               MaterialButton(
-                  child: Text('Done'),
+                  child: Text('Done',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),),
                   onPressed: () {
                     if (name_ingredients.text == null ||
                         name_ingredients.text == "") {
@@ -210,6 +238,49 @@ chosenCategory=null;
         });
   }
 
+////hakdog
+  ///
+
+  createDialogCategory(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            backgroundColor: Colors.indigo[100],
+            title: Text('Categories'),
+            content: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Categories(cat: 'Pastries and desserts'),
+                  Categories(cat: 'Main dishes'),
+                  Categories(cat: 'Salad'),
+                  Categories(cat: 'Bouillons'),
+                  Categories(cat: 'Snacks'),
+                  Categories(cat: 'Sauces'),
+                  Categories(cat: 'Beverage'),
+                  Categories(cat: 'Breakfast Food'),
+                  Categories(cat: 'Lunch Cuisine'),
+                  Categories(cat: 'Dinner Style'),
+                  Categories(cat: 'Sandwiches'),
+                  Categories(cat: 'Finger Food'),
+                  Categories(cat: 'Vegetarian Cuisine'),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              MaterialButton(
+                  // elevation: 5.0,
+                  child: Text('Done'),
+                  onPressed: () {
+                    // log(choice);
+                    Navigator.pop(context);
+                  })
+            ],
+          );
+        });
+  }
+
+///////hakdog
   createDialogRecipe(BuildContext context) {
     TextEditingController recipeSteps = new TextEditingController();
     int length;
@@ -217,7 +288,11 @@ chosenCategory=null;
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text('Recipe'),
+            backgroundColor: Colors.indigo[100],
+            title: Text('Recipe',
+            style: TextStyle(
+              fontSize: 20,
+            ),),
             content: Column(
               children: [
                 TextField(
@@ -229,7 +304,10 @@ chosenCategory=null;
             actions: <Widget>[
               MaterialButton(
                   // elevation: 5.0,
-                  child: Text('Done'),
+                  child: Text('Done',
+                  style: TextStyle(
+                    fontSize: 20, fontWeight: FontWeight.bold,
+                  ),),
                   onPressed: () {
                     if (recipeSteps.text == null || recipeSteps.text == "") {
                       Navigator.pop(context);
@@ -304,26 +382,37 @@ chosenCategory=null;
           padding: EdgeInsets.only(top: 10),
           child: Column(children: [
             Text('Category', style: TextStyle(fontSize: 25)),
-            SizedBox(height: 5),
-            DropdownButtonHideUnderline(
-              child: DropdownButton(
-                  elevation: 10,
-                  autofocus: true,
-                  hint: Text('Choose Category'),
-                  value: chosenCategory,
-                  onChanged: (value) {
-                    setState(() {
-                      chosenCategory = value;
-                    });
+            //hakdog
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: GestureDetector(
+                  onTap: () {
+                    createDialogCategory(context);
                   },
-                  dropdownColor: Colors.indigo[100],
-                  items: _category.map((value) {
-                    return DropdownMenuItem(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList()),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        gradient: LinearGradient(
+                          colors: [
+                            Colors.grey[400],
+                            Colors.indigoAccent[100],
+                            Colors.grey[400],
+                          ],
+                        )),
+                    width: 160,
+                    height: 50,
+                    child: Center(
+                        child: Text(
+                      "Choose Category",
+                      style: TextStyle(fontSize: 15),
+                    )),
+                  )),
             ),
+
+            ///hakdog
+            SizedBox(height: 5),
+            // DropdownButtonHideUnderline(
+
             Column(
               children: [
                 GestureDetector(
@@ -460,8 +549,12 @@ chosenCategory=null;
                 )
               ],
             ),
+
+            SizedBox(
+              height: 8
+            ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(10.0),
               child: Text('Ingredients', style: TextStyle(fontSize: 25)),
             ),
             ingr.length == 0
@@ -481,7 +574,6 @@ chosenCategory=null;
                                 style: TextStyle(
                                     fontSize: 18, fontStyle: FontStyle.italic)),
                           ),
-                        
                         ),
                       );
                     }),
@@ -537,7 +629,30 @@ chosenCategory=null;
               padding: const EdgeInsets.all(10),
               child: GestureDetector(
                   onTap: () {
-                    publish();
+                    if (choice == null ||
+                        url == null ||
+                        recipeName.text.isEmpty ||
+                        name_ingredients.text.isEmpty ||
+                        qty_ingredients.text.isEmpty ||
+                        units_ingredients.text.isEmpty ||
+                        tfcalories.text.isEmpty ||
+                        tfproteins.text.isEmpty ||
+                        tffats.text.isEmpty ||
+                        tfcarbs.text.isEmpty) {
+                      log("please lang gawas");
+                      trappingDialog(context);
+                      log(chosenCategory);
+                      log(url);
+                      log(recipeName.text);
+                      log(tfcalories.text);
+                      log(tfproteins.text);
+                      log(tffats.text);
+                      log(tfcarbs.text);
+                      log("please lang gawas2");
+                    } else {
+                      publish();
+                      log("chuy");
+                    }
                   },
                   child: containerDecoration("Publish")),
             ),
@@ -553,4 +668,41 @@ class Ingredients {
   final double qtyIngredients;
   final String units;
   Ingredients({this.nameIngredients, this.qtyIngredients, this.units});
+}
+
+class Categories extends StatefulWidget {
+  final String cat;
+  Categories({this.cat});
+  @override
+  _CategoriesState createState() => _CategoriesState();
+}
+
+class _CategoriesState extends State<Categories> {
+  bool valuefirst = false;
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Checkbox(
+            checkColor: Colors.amber,
+            activeColor: Colors.red,
+            value: valuefirst,
+            onChanged: (bool value) {
+              setState(() {
+                log("bah oakg abab");
+                sampleChoice = widget.cat.toLowerCase();
+                valuefirst = value;
+
+                if (value == true) {
+                  choice.add(widget.cat.toLowerCase());
+                }
+
+                log(valuefirst.toString());
+                log("humot kag baba");
+              });
+            }),
+        Text(widget.cat.toUpperCase())
+      ],
+    );
+  }
 }

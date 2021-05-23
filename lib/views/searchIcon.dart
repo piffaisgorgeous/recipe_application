@@ -22,7 +22,7 @@ class _SearchState extends State<Search> {
         backgroundColor: Colors.indigo[400],
         title: Text("Search Category"),
       ),
-      backgroundColor: Colors.grey[50],
+      backgroundColor: Colors.indigo[100],
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -67,7 +67,7 @@ class _SearchState extends State<Search> {
             ),
             Text(
               'Categories',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic),
             ),
             SizedBox(
               height: 15,
@@ -94,7 +94,7 @@ class _SearchState extends State<Search> {
             ),
             MiCard(
               icon: Icons.emoji_food_beverage_sharp,
-              title: 'Ginamos',
+              title: 'Sauces',
             ),
             MiCard(
               icon: Icons.local_drink_sharp,
@@ -102,15 +102,27 @@ class _SearchState extends State<Search> {
             ),
             MiCard(
               icon: Icons.dinner_dining,
-              title: 'Dine In',
+              title: 'Breakfast Food',
             ),
             MiCard(
               icon: Icons.set_meal,
-              title: 'Fish',
+              title: 'Lunch Cuisine',
             ),
             MiCard(
-              icon: Icons.favorite_outline_sharp,
-              title: 'Fruits',
+              icon: Icons.dining,
+              title: 'Dinner Style',
+            ),
+             MiCard(
+              icon: Icons.fastfood,
+              title: 'Sandwiches',
+            ),
+             MiCard(
+              icon: Icons.food_bank,
+              title: 'Finger Food',
+            ),
+             MiCard(
+              icon: Icons.dinner_dining,
+              title: 'Vegetarian Cuisine',
             ),
           ],
         ),
@@ -147,9 +159,12 @@ class _MiCardState extends State<MiCard> {
             children: [
               Icon(widget.icon),
               SizedBox(
-                width: 10,
+                width: 17,
               ),
-              Text(widget.title)
+              Text(widget.title,
+              style: TextStyle(
+                fontSize: 16, fontWeight: FontWeight.bold
+              ),)
             ],
           ),
         ),

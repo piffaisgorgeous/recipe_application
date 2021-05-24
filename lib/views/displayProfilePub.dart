@@ -6,9 +6,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:recipe_application/views/feed_details.dart';
 
 class ProfilePub extends StatefulWidget {
-    String username;
+  String username;
   String email;
-   ProfilePub({this.username,this.email});
+  ProfilePub({this.username, this.email});
 
   @override
   _ProfilePubState createState() => _ProfilePubState();
@@ -17,7 +17,6 @@ class ProfilePub extends StatefulWidget {
 class _ProfilePubState extends State<ProfilePub> {
   DatabaseMethods databaseMethods = new DatabaseMethods();
   Stream publishedRecipe;
-
 
   Widget RecipeList() {
     return StreamBuilder(
@@ -33,21 +32,18 @@ class _ProfilePubState extends State<ProfilePub> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => FeedDetails(
-
-                                      image: snapshot.data.docs[index]
-                                          .data()['upload']
-                                          .toString(),
-                                          email:snapshot.data.docs[index]
-                                          .data()['email']
-                                          .toString(),
-                                          recipe:snapshot.data.docs[index]
-                                          .data()['recipe_name']
-                                          .toString(),
-                                            foodName: snapshot.data.docs[index]
-                            .data()['recipe_name']
-                            .toString()
-
-                                    )));
+                                    image: snapshot.data.docs[index]
+                                        .data()['upload']
+                                        .toString(),
+                                    email: snapshot.data.docs[index]
+                                        .data()['email']
+                                        .toString(),
+                                    recipe: snapshot.data.docs[index]
+                                        .data()['recipe_name']
+                                        .toString(),
+                                    foodName: snapshot.data.docs[index]
+                                        .data()['recipe_name']
+                                        .toString())));
                       },
                       child: CardForRecipe(
                         name: snapshot.data.docs[index]
@@ -69,7 +65,9 @@ class _ProfilePubState extends State<ProfilePub> {
 
   @override
   void initState() {
-    databaseMethods.getUserPublish(widget.email,widget.username).then((result) {
+    databaseMethods
+        .getUserPublish(widget.email, widget.username)
+        .then((result) {
       setState(() {
         publishedRecipe = result;
       });
@@ -84,8 +82,7 @@ class _ProfilePubState extends State<ProfilePub> {
         appBar: AppBar(
             backgroundColor: Colors.indigo[400],
             title: Text(
-             
-             'Published REcipe',
+              'Published Recipe',
               style: TextStyle(color: Colors.white),
             )),
         body: Container(child: RecipeList()));

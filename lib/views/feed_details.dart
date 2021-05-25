@@ -3,9 +3,11 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:recipe_application/services/database.dart';
+import 'package:recipe_application/widget/basic_overlay_widget.dart';
 import 'package:recipe_application/widget/widget.dart';
 import 'package:slide_popup_dialog/slide_popup_dialog.dart';
 import 'package:slide_popup_dialog/slide_popup_dialog.dart';
+import 'package:video_player/video_player.dart';
 
 class FeedDetails extends StatefulWidget {
   final String image;
@@ -17,7 +19,10 @@ class FeedDetails extends StatefulWidget {
   @override
   _FeedDetailsState createState() => _FeedDetailsState();
 }
-
+TextEditingController textController = null;
+VideoPlayerController controller;
+String url = null;
+String typeString = null;
 class _FeedDetailsState extends State<FeedDetails> {
   DatabaseMethods databaseMethods = new DatabaseMethods();
   Stream healthInfosnapshot;
@@ -90,9 +95,19 @@ class _FeedDetailsState extends State<FeedDetails> {
               : Container();
         });
   }
+ Widget buildVideo() => Stack(
+        children: <Widget>[
+          buildVideoPlayer(),
+          Positioned.fill(child: BasicOverlayWidget(controller: controller)),
+        ],
+      );
 
-  
+  Widget buildVideoPlayer() => AspectRatio(
+        aspectRatio: controller.value.aspectRatio,
+        child: VideoPlayer(controller),
+      );
 
+ 
   @override
   void initState() {
     databaseMethods
@@ -115,6 +130,18 @@ class _FeedDetailsState extends State<FeedDetails> {
         recipeSnapshot = result;
       });
     });
+
+     setState(() {
+      //uploadFile();
+      Uri uri = Uri.parse(widget.image);
+      typeString = uri.path.substring(uri.path.length - 3).toLowerCase();
+      controller = VideoPlayerController.network(widget.image)
+        ..addListener(() => setState(() {}))
+        ..setLooping(false)
+        ..initialize().then((_) => controller.play());
+        buildVideo();
+      //  isMuted = controller.value.volume == 0;
+    });
   }
 
   @override
@@ -130,16 +157,27 @@ class _FeedDetailsState extends State<FeedDetails> {
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-              child: GestureDetector(
-                onTap:(){_showDialog(context);
-                
-                } ,
-                              child: Container(
-                    height: MediaQuery.of(context).size.height / 2,
-                    width: MediaQuery.of(context).size.width,
-                    child: Image.network(widget.image)),
-              ),
-            ),
+              child: 
+              Container(
+                        child: typeString == null 
+                            ? Container(
+                                child: Text("haksog"),
+                              )
+                            : typeString == "jpg" || typeString == "png"
+                                ? AspectRatio(
+                                    aspectRatio: controller.value.aspectRatio,
+                                    child: Image.network(widget.image))
+                                : Container(
+                                    // color: Colors.green,
+                                    alignment: Alignment.topCenter,
+                                    child:  buildVideo()),
+                      ),),
+              //   Container(
+              //       height: MediaQuery.of(context).size.height / 2,
+              //       width: MediaQuery.of(context).size.width,
+              //       child: Image.network(widget.image)),
+              // ),
+            
 
             // sa pic
             Padding(
@@ -275,13 +313,5 @@ class _FeedDetailsState extends State<FeedDetails> {
         )));
   }
 
-   void _showDialog(BuildContext context) {
-   showSlideDialog(
-      context: context,
-      child: Text("Hello World"),
-      barrierColor: Colors.white.withOpacity(0.7),
-      pillColor: Colors.red,
-      backgroundColor: Colors.yellow,
-    );
-  }
+ 
 }

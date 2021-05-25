@@ -4,16 +4,21 @@ import 'package:flutter/material.dart';
 import 'package:recipe_application/services/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:recipe_application/views/feed_details.dart';
+import 'package:recipe_application/widget/basic_overlay_widget.dart';
+import 'package:video_player/video_player.dart';
 
 class ProfilePub extends StatefulWidget {
-  String username;
-  String email;
+  final String username;
+ final  String email;
   ProfilePub({this.username, this.email});
 
   @override
   _ProfilePubState createState() => _ProfilePubState();
 }
-
+TextEditingController textController = null;
+VideoPlayerController controller;
+String url = null;
+String typeString = null;
 class _ProfilePubState extends State<ProfilePub> {
   DatabaseMethods databaseMethods = new DatabaseMethods();
   Stream publishedRecipe;
@@ -89,11 +94,49 @@ class _ProfilePubState extends State<ProfilePub> {
   }
 }
 
-class CardForRecipe extends StatelessWidget {
+class CardForRecipe extends StatefulWidget {
   final String name;
   final String image;
   final String foodName;
   CardForRecipe({this.name, this.image, this.foodName});
+
+  @override
+  _CardForRecipeState createState() => _CardForRecipeState();
+}
+
+class _CardForRecipeState extends State<CardForRecipe> {
+
+  
+  Widget buildVideo() => Stack(
+        children: <Widget>[
+          buildVideoPlayer(),
+          Positioned.fill(child: BasicOverlayWidget(controller: controller)),
+        ],
+      );
+
+  Widget buildVideoPlayer() => AspectRatio(
+        aspectRatio: controller.value.aspectRatio,
+        child: VideoPlayer(controller),
+      );
+
+ 
+
+  @override
+  void initState() {
+ setState(() {
+      //uploadFile();
+      Uri uri = Uri.parse(widget.image);
+      typeString = uri.path.substring(uri.path.length - 3).toLowerCase();
+      controller = VideoPlayerController.network(widget.image)
+        ..addListener(() => setState(() {}))
+        ..setLooping(false)
+        ..initialize().then((_) => controller.play());
+        buildVideo();
+      //  isMuted = controller.value.volume == 0;
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -113,7 +156,7 @@ class CardForRecipe extends StatelessWidget {
                     child: Align(
                       alignment: Alignment.topLeft,
                       child: Text(
-                        name,
+                        widget.name,
                         style: TextStyle(
                             fontStyle: FontStyle.italic, fontSize: 25.0),
                       ),
@@ -122,18 +165,32 @@ class CardForRecipe extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Container(
-                      // color: Colors.blue,
-                      height: 200,
-                      width: MediaQuery.of(context).size.width,
-                      child: Image.network(image),
-                    ),
+                        child: typeString == null 
+                            ? Container(
+                                child: Text("haksog"),
+                              )
+                            : typeString == "jpg" || typeString == "png"
+                                ? AspectRatio(
+                                    aspectRatio: controller.value.aspectRatio,
+                                    child: Image.network(widget.image))
+                                : Container(
+                                    // color: Colors.green,
+                                    alignment: Alignment.topCenter,
+                                    child:  buildVideo()),
+                      )
+                    // Container(
+                    //   // color: Colors.blue,
+                    //   height: 200,
+                    //   width: MediaQuery.of(context).size.width,
+                    //   child: Image.network(widget.image),
+                    // ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Align(
                       alignment: Alignment.bottomLeft,
                       child: Text(
-                        foodName,
+                        widget.foodName,
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 20.0),
                       ),

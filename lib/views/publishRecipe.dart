@@ -14,8 +14,7 @@ import 'package:path/path.dart';
 import 'package:video_player/video_player.dart';
 
 class PublishRecipe extends StatefulWidget {
-  final String
-      userName; 
+  final String userName;
   final String userEmail;
   PublishRecipe({this.userName, this.userEmail});
   @override
@@ -33,6 +32,7 @@ class _PublishRecipeState extends State<PublishRecipe> {
   VideoPlayerController controller;
   String url = null;
   String typeString = null;
+ 
 
   DatabaseMethods databaseMethods = new DatabaseMethods();
   TextEditingController recipeName = TextEditingController();
@@ -43,7 +43,7 @@ class _PublishRecipeState extends State<PublishRecipe> {
   TextEditingController name_ingredients = new TextEditingController();
   TextEditingController qty_ingredients = new TextEditingController();
   TextEditingController units_ingredients = new TextEditingController();
-
+  
   String chosenCategory;
   List<Ingredients> ingredients = [];
   List<String> ingr = [];
@@ -89,20 +89,11 @@ class _PublishRecipeState extends State<PublishRecipe> {
     });
   }
 
-// clearimage() {
-//     setState(() {
-//     typeString = null;
-//       url = null;
-//       controller = null;
-//       textController = null;
-//     });
-//   }
   publish() {
     String recipe_name = recipeName.text;
     Map<String, dynamic> userMap = {
       "recipe_name": recipe_name,
       "email": widget.userEmail,
-      "user_name": widget.userName,
       "upload": url,
       "cat": choice
     };
@@ -118,19 +109,11 @@ class _PublishRecipeState extends State<PublishRecipe> {
     databaseMethods.uploadRecipeInfo(recipe_name, userMap);
     databaseMethods.uploadDetailsofRecipe(ingredientsMap, recipeMap,
         healthInfoMap, recipe_name, widget.userEmail);
-    // log('amen');
 
-    // chosenCategory = null;
     setState(() {
       log("pak");
       ingr.length = 0;
       recipe.length = 0;
-//imageCache.clear();
-      // textController.text="";
-      // controller="";
-      // typeString = "";
-
-      // textController.text = "";
     });
 
     recipeName.text = "";
@@ -153,15 +136,16 @@ class _PublishRecipeState extends State<PublishRecipe> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            backgroundColor: Colors.indigo[200],
+              backgroundColor: Colors.indigo[200],
               title: Text('Kindly input please'),
               actions: <Widget>[
                 MaterialButton(
                     // elevation: 5.0,
-                    child: Text('Done',
-                    style: TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.bold
-                    ),),
+                    child: Text(
+                      'Done',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
                     onPressed: () {
                       Navigator.pop(context);
                     })
@@ -180,16 +164,15 @@ class _PublishRecipeState extends State<PublishRecipe> {
 
           return AlertDialog(
             backgroundColor: Colors.indigo[100],
-            title: Text('Ingredients',
-            style: TextStyle(
-              fontSize: 20
-            ),),
+            title: Text(
+              'Ingredients',
+              style: TextStyle(fontSize: 20),
+            ),
             content: SingleChildScrollView(
               child: Column(
                 children: [
                   TextField(
                     controller: name_ingredients,
-                    
                     decoration: textFieldInputDecoration("name"),
                   ),
                   SizedBox(height: 8),
@@ -207,11 +190,13 @@ class _PublishRecipeState extends State<PublishRecipe> {
             ),
             actions: <Widget>[
               MaterialButton(
-                  child: Text('Done',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                  ),),
+                  child: Text(
+                    'Done',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  ),
                   onPressed: () {
                     if (name_ingredients.text == null ||
                         name_ingredients.text == "") {
@@ -289,10 +274,12 @@ class _PublishRecipeState extends State<PublishRecipe> {
         builder: (context) {
           return AlertDialog(
             backgroundColor: Colors.indigo[100],
-            title: Text('Recipe',
-            style: TextStyle(
-              fontSize: 20,
-            ),),
+            title: Text(
+              'Recipe',
+              style: TextStyle(
+                fontSize: 20,
+              ),
+            ),
             content: Column(
               children: [
                 TextField(
@@ -304,10 +291,13 @@ class _PublishRecipeState extends State<PublishRecipe> {
             actions: <Widget>[
               MaterialButton(
                   // elevation: 5.0,
-                  child: Text('Done',
-                  style: TextStyle(
-                    fontSize: 20, fontWeight: FontWeight.bold,
-                  ),),
+                  child: Text(
+                    'Done',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   onPressed: () {
                     if (recipeSteps.text == null || recipeSteps.text == "") {
                       Navigator.pop(context);
@@ -356,14 +346,19 @@ class _PublishRecipeState extends State<PublishRecipe> {
         child: VideoPlayer(controller),
       );
 
+ 
+
   @override
   void dispose() {
     controller.dispose();
     super.dispose();
   }
-//kani  piifff
 
-  ///need
+  @override
+  void initState() {
+   
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -550,9 +545,7 @@ class _PublishRecipeState extends State<PublishRecipe> {
               ],
             ),
 
-            SizedBox(
-              height: 8
-            ),
+            SizedBox(height: 8),
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: Text('Ingredients', style: TextStyle(fontSize: 25)),
@@ -650,6 +643,7 @@ class _PublishRecipeState extends State<PublishRecipe> {
                       log(tfcarbs.text);
                       log("please lang gawas2");
                     } else {
+                     
                       publish();
                       log("chuy");
                     }

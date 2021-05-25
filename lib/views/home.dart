@@ -15,8 +15,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:recipe_application/api/firebase_api.dart';
-import 'package:recipe_application/views/profile.dart';
-import 'package:recipe_application/views/profileIcon.dart';
 import 'package:recipe_application/views/publishRecipe.dart';
 import 'package:recipe_application/views/searchIcon.dart';
 // import 'package:recipe_application/views/uploadimage.dart';
@@ -28,21 +26,26 @@ import 'package:path/path.dart';
 import 'feed.dart';
 
 import 'homeIcon.dart';
+import 'newProfile.dart';
 
 void main() => runApp(new BottomNav());
 
 class BottomNav extends StatefulWidget {
+ 
   final String userName;
   final String userEmail;
 
-  BottomNav({this.userName, this.userEmail});
+  BottomNav({@ required this.userName, this.userEmail});
   BottomNavState createState() => BottomNavState();
 }
 
 class BottomNavState extends State<BottomNav> {
+  
   int _currentIndex = 0;
   callPage(int currentIndex) {
+     
     switch (currentIndex) {
+      
       case 0:
       return Feed();
       case 1:
@@ -52,7 +55,8 @@ class BottomNavState extends State<BottomNav> {
       case 3:
         return Search();
       case 4:
-        return  Profilet(username:widget.userName, email: widget.userEmail);
+        
+        return  NewProfileInfo(username:widget.userName, email: widget.userEmail);
         break;
       default:
         return Home();
@@ -61,6 +65,7 @@ class BottomNavState extends State<BottomNav> {
 
   @override
   Widget build(BuildContext context) {
+ 
     return MaterialApp(
       title: "Recipe",
       home: Scaffold(

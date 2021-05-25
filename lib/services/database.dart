@@ -13,8 +13,8 @@ class DatabaseMethods {
   getUserbyUserEmail(String userEmail) async {
     return await FirebaseFirestore.instance
         .collection('users')
-        .where("name", isEqualTo: userEmail)
-        .get();
+        .where("email", isEqualTo: userEmail)
+        .snapshots();
   }
 
   uploadUserInfo(userMap) {
@@ -23,7 +23,7 @@ class DatabaseMethods {
     });
   }
 
-  uploadRecipeInfo( String recipeName, userMap) {
+  uploadRecipeInfo(String recipeName, userMap) {
     FirebaseFirestore.instance
         .collection('recipes')
         .doc(recipeName)
@@ -60,46 +60,50 @@ class DatabaseMethods {
         .catchError((e) {
       print(e.toString());
     });
-   
-
   }
 
   getRecipe() async {
+    return await FirebaseFirestore.instance.collection('recipes').snapshots();
+  }
+
+  getDetailsofRecipe(String recipeName, String userEmail) async {
     return await FirebaseFirestore.instance
         .collection('recipes')
+        .doc(recipeName)
+        .collection('Health Informations')
         .snapshots();
   }
 
-  getDetailsofRecipe(String recipeName,String userEmail) async{
+  getIngredients(String recipeName, String userEmail) async {
     return await FirebaseFirestore.instance
-    .collection('recipes')
-    .doc(recipeName)
-    .collection('Health Informations')
-    .snapshots();
+        .collection('recipes')
+        .doc(recipeName)
+        .collection('Ingredients')
+        .snapshots();
   }
 
-  getIngredients (String recipeName, String userEmail ) async{
-    return await FirebaseFirestore. instance
-    .collection('recipes')
-    .doc(recipeName)
-    .collection('Ingredients')
-    .snapshots();
-  }
-  getRecipeDetails (String recipeName, String userEmail ) async{
-    return await FirebaseFirestore. instance
-    .collection('recipes')
-    .doc(recipeName)
-    .collection('Recipe')
-    .snapshots();
+  getRecipeDetails(String recipeName, String userEmail) async {
+    return await FirebaseFirestore.instance
+        .collection('recipes')
+        .doc(recipeName)
+        .collection('Recipe')
+        .snapshots();
   }
 
-  getSearchedRecipe(List category) async
-  {
-    return await FirebaseFirestore.instance 
-    .collection('recipes')
-    .where('cat', arrayContainsAny: category)
-    .snapshots();
+  getSearchedRecipe(List category) async {
+    return await FirebaseFirestore.instance
+        .collection('recipes')
+        .where('cat', arrayContainsAny: category)
+        .snapshots();
   }
+
+  getSpecificRecipe(String recipename) async {
+    return await FirebaseFirestore.instance
+        .collection('recipes')
+        .where('recipe_name', isEqualTo: recipename)
+        .snapshots();
+  }
+
 
   uploadRecipeandAuthor(recipeName, userMap) {
     FirebaseFirestore.instance
@@ -108,35 +112,44 @@ class DatabaseMethods {
         .set(userMap);
   }
 
- getUserPublish(String email,String username) async
-  {
-    return await FirebaseFirestore.instance 
-    .collection('recipes')
-    .where('email', isEqualTo:email)
-    .where('user_name', isEqualTo:username)
-    .snapshots();
+  getUserPublish(String email, String username) async {
+    return await FirebaseFirestore.instance
+        .collection('recipes')
+        .where('email', isEqualTo: email)
+        .where('user_name', isEqualTo: username)
+        .snapshots();
   }
 
-  recipeOfTheDay(DateTime date, recipeMap)
-  {
-       FirebaseFirestore.instance
+  recipeOfTheDay(DateTime date, recipeMap) {
+    FirebaseFirestore.instance
         .collection('randomRecipe')
-        .doc(date.toString())
+        .doc()
         .set(recipeMap)
         .catchError((e) {
       print(e.toString());
     });
-
   }
 
-  getrecipeOfTheDay(DateTime date) async
-  {
-      return await FirebaseFirestore.instance
+
+  checkRandom(DateTime date) async {
+    return await FirebaseFirestore.instance
         .collection('randomRecipe')
         .where('date', isEqualTo: date)
         .snapshots();
   }
 
+  getRandom(DateTime date) async {
+    return await FirebaseFirestore.instance
+        .collection('randomRecipe')
+        .where('date', isEqualTo: date)
+        .snapshots();
+  }
 
-
+  getFood(List category) async{
+    return await FirebaseFirestore.instance
+        .collection('recipes')
+        .where('cat', arrayContainsAny: category)
+        .snapshots();
+  }
+   
 }

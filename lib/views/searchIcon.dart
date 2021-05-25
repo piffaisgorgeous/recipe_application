@@ -5,8 +5,10 @@ import 'package:recipe_application/views/displaySearch.dart';
 import 'package:recipe_application/widget/widget.dart';
 
 // SEARCH == account
+
 String sampleChoice;
-List<String> choice = [];
+List<String> choice = [''];
+
 class Search extends StatefulWidget {
   @override
   _SearchState createState() => _SearchState();
@@ -16,6 +18,7 @@ class _SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
     TextEditingController search_cat = new TextEditingController();
+
     choice.clear();
     return Scaffold(
       appBar: AppBar(
@@ -35,17 +38,26 @@ class _SearchState extends State<Search> {
                     child: TextField(
                         controller: search_cat,
                         decoration:
-                            textFieldInputDecoration("Search Category")),
+                            textFieldInputDecoration("Search Recipe Name")),
                   ),
                 ),
                 GestureDetector(
                   onTap: () {
-                     //initiateSearch();
+                    //initiateSearch();
+                    if (search_cat.text == null || search_cat.text == "") {
                       Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => DisplaySearch(category:choice)
-                                ));
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  DisplaySearch(category: choice)));
+                    } else {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DisplaySearchRecipe(
+                                  recipeName: search_cat.text)));
+                    }
+                   // search_cat.text = "";
                   },
                   child: Container(
                       height: 40,
@@ -67,7 +79,10 @@ class _SearchState extends State<Search> {
             ),
             Text(
               'Categories',
-              style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic),
+              style: TextStyle(
+                  fontSize: 23,
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.italic),
             ),
             SizedBox(
               height: 15,
@@ -112,15 +127,15 @@ class _SearchState extends State<Search> {
               icon: Icons.dining,
               title: 'Dinner Style',
             ),
-             MiCard(
+            MiCard(
               icon: Icons.fastfood,
               title: 'Sandwiches',
             ),
-             MiCard(
+            MiCard(
               icon: Icons.food_bank,
               title: 'Finger Food',
             ),
-             MiCard(
+            MiCard(
               icon: Icons.dinner_dining,
               title: 'Vegetarian Cuisine',
             ),
@@ -141,9 +156,8 @@ class MiCard extends StatefulWidget {
   _MiCardState createState() => _MiCardState();
 }
 
+int i = 0;
 
-
-  int i=0;
 class _MiCardState extends State<MiCard> {
   // Map<String, dynamic> iconMap = {"icon": widget.icon};
   bool valuefirst = false;
@@ -161,29 +175,27 @@ class _MiCardState extends State<MiCard> {
               SizedBox(
                 width: 17,
               ),
-              Text(widget.title,
-              style: TextStyle(
-                fontSize: 16, fontWeight: FontWeight.bold
-              ),)
+              Text(
+                widget.title,
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              )
             ],
           ),
         ),
         Checkbox(
-            checkColor: Colors.amber,
-            activeColor: Colors.red,
+            checkColor: Colors.white,
+            activeColor: Colors.indigo,
             value: this.valuefirst,
             onChanged: (bool value) {
               setState(() {
-                sampleChoice=widget.title.toLowerCase();
+                sampleChoice = widget.title.toLowerCase();
                 this.valuefirst = value;
                 choice.add(widget.title.toLowerCase());
               });
-            
-                log(choice[i]);
-                i++;
-            }),
 
-          
+              log(choice[i]);
+              i++;
+            }),
       ],
     );
   }

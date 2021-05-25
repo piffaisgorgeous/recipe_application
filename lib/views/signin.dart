@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:recipe_application/helper/helperfunctions.dart';
 import 'package:recipe_application/services/auth.dart';
@@ -38,9 +40,12 @@ class _SignInState extends State<SignIn> {
           .getUserbyUserEmail(emailEditingController.text)
           .then((result) {
         snapshotUserInfo = result;
+        username= snapshotUserInfo.docs[0].data()["name"];
+        log(username);
         HelperFunctions.saveUserNameSharedPreference(
             snapshotUserInfo.docs[0].data()["name"]);
-            username= snapshotUserInfo.docs[0].data()["name"];
+            
+            print("last"+username);
       });
       setState(() {
         isLoading = true;
@@ -50,14 +55,23 @@ class _SignInState extends State<SignIn> {
           .signInWithEmailAndPassword(
               emailEditingController.text, passwordEditingController.text)
           .then((result) {
-        if (result != null) {
+         if (result != null) {
+           
+         
           HelperFunctions.saveUserLoggedInSharedPreference(true);
+           setState(() {
+              //username= snapshotUserInfo.docs[0].data()["name"];
+           });
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => BottomNav(
                 userName:username, userEmail: emailEditingController.text
               )));
-        }
+             print(username);
+         }
       });
+         
+        
+    
     }
   }
 
